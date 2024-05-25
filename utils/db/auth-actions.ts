@@ -64,20 +64,33 @@ async function createChallenge(
     return insertedId;
 }
 
-async function defeatChallenge(challengeId: string): Promise<void> {
+async function defeatChallenge(challengeId: string): Promise<string | null> {
     const resUpdateChallenge = await dbClient
         .update(schema.challenges)
         .set({ defeated: true })
         .where(eq(schema.challenges.id, challengeId))
         .returning({ userId: schema.challenges.userId });
 
-    if (resUpdateChallenge.length == 0) return;
+    if (resUpdateChallenge.length == 0) return null;
 
     const userId = resUpdateChallenge[0].userId;
+    return userId;
+}
 
+async function verifyUser(userId: string): Promise<void> {
     await dbClient
         .update(schema.users)
         .set({ verified: true })
+        .where(eq(schema.users.id, userId));
+}
+
+async function resetPassword(
+    userId: string,
+    newPassword: string
+): Promise<void> {
+    await dbClient
+        .update(schema.users)
+        .set({ password: newPassword })
         .where(eq(schema.users.id, userId));
 }
 
@@ -87,6 +100,8 @@ const auth = {
     getChallenge,
     createChallenge,
     defeatChallenge,
+    verifyUser,
+    resetPassword,
 };
 
 export default auth;

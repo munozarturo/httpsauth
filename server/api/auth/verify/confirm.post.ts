@@ -56,7 +56,15 @@ export default defineEventHandler(async (event) => {
                 message: "Incorrect verification code.",
             });
 
-        await DB.auth.defeatChallenge(challengeId);
+        const userId = await DB.auth.defeatChallenge(challengeId);
+
+        if (!userId)
+            return createError({
+                statusCode: 400,
+                message: "Failed to defeat challenge.",
+            });
+
+        await DB.auth.verifyUser(userId);
 
         return {
             message: "Success.",
