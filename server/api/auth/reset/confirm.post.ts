@@ -60,7 +60,9 @@ export default defineEventHandler(async (event) => {
                 message: "Incorrect verification code.",
             });
 
-        await DB.auth.resetPassword(userId, newPassword);
+        const newPasswordHash = await bcrypt.hash(newPassword, 10);
+
+        await DB.auth.resetPassword(userId, newPasswordHash);
 
         return {
             message: "Success.",
