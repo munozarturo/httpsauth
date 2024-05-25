@@ -3,9 +3,10 @@ import * as bcrypt from "bcrypt";
 import DB from "~/utils/db/actions";
 import { sendEmail } from "~/utils/aws/ses";
 import { z } from "zod";
+import { zodEmail } from "~/utils/validation/common";
 
 const bodyParser = z.object({
-    email: z.string().email(),
+    email: zodEmail,
 });
 
 export default defineEventHandler(async (event) => {
@@ -30,15 +31,15 @@ export default defineEventHandler(async (event) => {
                 message: "Email already verified.",
             });
 
-        const verificationCode = Math.round(Math.random() * 1000000)
+        const token = Math.round(Math.random() * 1000000)
             .toString()
             .padStart(6, "0");
-        const verificationCodeHash = await bcrypt.hash(verificationCode, 10);
+        const tokenHash = await bcrypt.hash(token, 10);
 
         const challengeId = await DB.auth.createChallenge({
             type: "verification",
             userId: user.id,
-            tokenHash: verificationCodeHash,
+            tokenHash: tokenHash,
         });
 
         await sendEmail({
@@ -46,8 +47,8 @@ export default defineEventHandler(async (event) => {
             destination: { to: email },
             subject: "Verify Your Email Address",
             body: {
-                html: `${verificationCode}`,
-                text: `${verificationCode}`,
+                html: `${token}`,
+                text: `${token}`,
             },
             replyTo: `contact@${DOMAIN}`,
         });

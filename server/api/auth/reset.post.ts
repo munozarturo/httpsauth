@@ -3,9 +3,10 @@ import * as bcrypt from "bcrypt";
 import DB from "~/utils/db/actions";
 import { sendEmail } from "~/utils/aws/ses";
 import { z } from "zod";
+import { zodEmail } from "~/utils/validation/common";
 
 const bodyParser = z.object({
-    email: z.string().email(),
+    email: zodEmail,
 });
 
 export default defineEventHandler(async (event) => {
@@ -24,15 +25,15 @@ export default defineEventHandler(async (event) => {
                 message: "Email not in use.",
             });
 
-        const resetCode = Math.round(Math.random() * 1000000)
+        const token = Math.round(Math.random() * 1000000)
             .toString()
             .padStart(6, "0");
-        const resetCodeHash = await bcrypt.hash(resetCode, 10);
+        const tokenHash = await bcrypt.hash(token, 10);
 
         const challengeId = await DB.auth.createChallenge({
             type: "reset",
             userId: user.id,
-            tokenHash: resetCodeHash,
+            tokenHash: tokenHash,
         });
 
         await sendEmail({
@@ -40,8 +41,8 @@ export default defineEventHandler(async (event) => {
             destination: { to: email },
             subject: "Reset Your Password",
             body: {
-                html: `${resetCode}`,
-                text: `${resetCode}`,
+                html: `${token}`,
+                text: `${token}`,
             },
             replyTo: `contact@${DOMAIN}`,
         });

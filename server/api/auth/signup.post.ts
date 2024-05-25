@@ -1,11 +1,13 @@
 import * as bcrypt from "bcrypt";
 
+import { zodEmail, zodPassword } from "~/utils/validation/common";
+
 import DB from "~/utils/db/actions";
 import { z } from "zod";
 
 const bodyParser = z.object({
-    email: z.string().email(),
-    password: z.string(),
+    email: zodEmail,
+    password: zodPassword,
 });
 
 export default defineEventHandler(async (event) => {

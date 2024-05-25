@@ -1,11 +1,13 @@
 import * as bcrypt from "bcrypt";
 
+import { zodToken, zodUUID } from "~/utils/validation/common";
+
 import DB from "~/utils/db/actions";
 import { z } from "zod";
 
 const bodyParser = z.object({
-    challengeId: z.string(),
-    verificationCode: z.string().min(6).max(6),
+    challengeId: zodUUID,
+    token: zodToken,
 });
 
 export default defineEventHandler(async (event) => {
@@ -13,7 +15,7 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event);
 
     try {
-        const { challengeId, verificationCode } = bodyParser.parse(body);
+        const { challengeId, token } = bodyParser.parse(body);
 
         const challenge = await DB.auth.getChallenge(challengeId);
         if (!challenge)
@@ -45,7 +47,7 @@ export default defineEventHandler(async (event) => {
             });
         }
 
-        if (!(await bcrypt.compare(verificationCode, challenge.tokenHash)))
+        if (!(await bcrypt.compare(token, challenge.tokenHash)))
             return createError({
                 statusCode: 400,
                 message: "Incorrect verification code.",
