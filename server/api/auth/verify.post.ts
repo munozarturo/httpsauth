@@ -38,7 +38,7 @@ export default defineEventHandler(async (event) => {
         const challengeId = await DB.auth.createChallenge({
             type: "verification",
             userId: user.id,
-            verificationCode: verificationCodeHash,
+            tokenHash: verificationCodeHash,
         });
 
         await sendEmail({

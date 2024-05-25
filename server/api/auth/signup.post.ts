@@ -21,9 +21,9 @@ export default defineEventHandler(async (event) => {
                 message: "Email in use.",
             });
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const passwordHash = await bcrypt.hash(password, 10);
 
-        await DB.auth.createUser({ email, password: hashedPassword });
+        await DB.auth.createUser({ email, passwordHash });
 
         return {
             message: "Success.",

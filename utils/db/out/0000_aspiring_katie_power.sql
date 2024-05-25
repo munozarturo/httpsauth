@@ -9,8 +9,8 @@ CREATE TABLE IF NOT EXISTS "challenges" (
 	"challenge_type" "challenge_type" NOT NULL,
 	"user_id" uuid NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
-	"password" text NOT NULL,
-	"defeated" boolean DEFAULT false NOT NULL
+	"token_hash" text NOT NULL,
+	"used" boolean DEFAULT false NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "sessions" (
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS "sessions" (
 CREATE TABLE IF NOT EXISTS "users" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"email" text NOT NULL,
-	"password" text NOT NULL,
+	"password_hash" text NOT NULL,
 	"verified" boolean DEFAULT false NOT NULL,
 	CONSTRAINT "users_email_unique" UNIQUE("email")
 );

@@ -10,7 +10,7 @@ import {
 export const users = pgTable("users", {
     id: uuid("id").primaryKey().defaultRandom(),
     email: text("email").notNull().unique(),
-    password: text("password").notNull(),
+    passwordHash: text("password_hash").notNull(),
     verified: boolean("verified").notNull().default(false),
 });
 
@@ -35,6 +35,6 @@ export const challenges = pgTable("challenges", {
         .notNull()
         .references(() => users.id),
     createdAt: timestamp("created_at").notNull().defaultNow(),
-    verificationCode: text("password").notNull(),
-    defeated: boolean("defeated").notNull().default(false),
+    tokenHash: text("token_hash").notNull(),
+    used: boolean("used").notNull().default(false),
 });

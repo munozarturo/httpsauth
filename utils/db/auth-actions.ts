@@ -67,7 +67,7 @@ async function createChallenge(
 async function defeatChallenge(challengeId: string): Promise<string | null> {
     const resUpdateChallenge = await dbClient
         .update(schema.challenges)
-        .set({ defeated: true })
+        .set({ used: true })
         .where(eq(schema.challenges.id, challengeId))
         .returning({ userId: schema.challenges.userId });
 
@@ -86,11 +86,11 @@ async function verifyUser(userId: string): Promise<void> {
 
 async function resetPassword(
     userId: string,
-    newPassword: string
+    passwordHash: string
 ): Promise<void> {
     await dbClient
         .update(schema.users)
-        .set({ password: newPassword })
+        .set({ passwordHash })
         .where(eq(schema.users.id, userId));
 }
 

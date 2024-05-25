@@ -5,6 +5,7 @@ export default defineNuxtConfig({
     runtimeConfig: {
         auth: {
             verificationCodeExpiryTime: 60 * 5 * 1000, // 5 minutes (ms)
+            resetCodeExpiryTime: 60 * 5 * 1000, // 5 minutes (ms)
         },
     },
 });

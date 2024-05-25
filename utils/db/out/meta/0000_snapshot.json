@@ -1,5 +1,5 @@
 {
-  "id": "4b89d4f4-4cc0-421a-b8d1-1cf0ece1c86b",
+  "id": "c427b923-5430-4be0-9a66-a5aa5d690e2a",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "6",
   "dialect": "postgresql",
@@ -35,14 +35,14 @@
           "notNull": true,
           "default": "now()"
         },
-        "password": {
-          "name": "password",
+        "token_hash": {
+          "name": "token_hash",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "defeated": {
-          "name": "defeated",
+        "used": {
+          "name": "used",
           "type": "boolean",
           "primaryKey": false,
           "notNull": true,
@@ -136,8 +136,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "password": {
-          "name": "password",
+        "password_hash": {
+          "name": "password_hash",
           "type": "text",
           "primaryKey": false,
           "notNull": true

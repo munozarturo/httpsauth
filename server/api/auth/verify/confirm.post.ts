@@ -22,10 +22,10 @@ export default defineEventHandler(async (event) => {
                 message: "Challenge doesn't exist.",
             });
 
-        if (challenge.defeated)
+        if (challenge.used)
             return createError({
                 statusCode: 400,
-                message: "Challenge already defeated.",
+                message: "Challenge already used.",
             });
 
         if (challenge.type !== "verification")
@@ -45,12 +45,7 @@ export default defineEventHandler(async (event) => {
             });
         }
 
-        if (
-            !(await bcrypt.compare(
-                verificationCode,
-                challenge.verificationCode
-            ))
-        )
+        if (!(await bcrypt.compare(verificationCode, challenge.tokenHash)))
             return createError({
                 statusCode: 400,
                 message: "Incorrect verification code.",

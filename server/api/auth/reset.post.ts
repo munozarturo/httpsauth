@@ -32,7 +32,7 @@ export default defineEventHandler(async (event) => {
         const challengeId = await DB.auth.createChallenge({
             type: "reset",
             userId: user.id,
-            verificationCode: resetCodeHash,
+            tokenHash: resetCodeHash,
         });
 
         await sendEmail({
