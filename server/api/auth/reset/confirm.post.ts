@@ -47,7 +47,7 @@ export default defineEventHandler(async (event) => {
             });
         }
 
-        const userId = await DB.auth.defeatChallenge(challengeId);
+        const userId = await DB.auth.attemptChallenge(challengeId);
 
         if (!userId)
             return createError({

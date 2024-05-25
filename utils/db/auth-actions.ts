@@ -66,7 +66,7 @@ async function createChallenge(
     return insertedId;
 }
 
-async function defeatChallenge(challengeId: string): Promise<string | null> {
+async function attemptChallenge(challengeId: string): Promise<string | null> {
     const resUpdateChallenge = await dbClient
         .update(schema.challenges)
         .set({ used: true })
@@ -141,7 +141,7 @@ const auth = {
     createUser,
     getChallenge,
     createChallenge,
-    defeatChallenge,
+    attemptChallenge,
     verifyUser,
     resetPassword,
 };

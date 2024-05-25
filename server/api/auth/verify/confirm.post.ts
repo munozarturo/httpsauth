@@ -53,7 +53,7 @@ export default defineEventHandler(async (event) => {
                 message: "Incorrect verification code.",
             });
 
-        const userId = await DB.auth.defeatChallenge(challengeId);
+        const userId = await DB.auth.attemptChallenge(challengeId);
 
         if (!userId)
             return createError({
