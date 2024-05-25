@@ -16,7 +16,7 @@ export const users = pgTable("users", {
 
 export const sessions = pgTable("sessions", {
     id: uuid("id").primaryKey().defaultRandom(),
-    valid: boolean("valid").notNull().default(true),
+    active: boolean("active").notNull().default(true),
     userId: uuid("user_id")
         .notNull()
         .references(() => users.id),
