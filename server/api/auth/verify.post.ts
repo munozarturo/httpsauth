@@ -30,11 +30,10 @@ export default defineEventHandler(async (event) => {
                 message: "Email already verified.",
             });
 
-        const verificationCode = Math.round(Math.random() * 1000000);
-        const verificationCodeHash = await bcrypt.hash(
-            verificationCode.toString(),
-            10
-        );
+        const verificationCode = Math.round(Math.random() * 1000000)
+            .toString()
+            .padStart(6, "0");
+        const verificationCodeHash = await bcrypt.hash(verificationCode, 10);
 
         const challengeId = await DB.auth.createChallenge({
             type: "verification",

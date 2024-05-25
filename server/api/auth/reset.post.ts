@@ -24,8 +24,10 @@ export default defineEventHandler(async (event) => {
                 message: "Email not in use.",
             });
 
-        const resetCode = Math.round(Math.random() * 1000000);
-        const resetCodeHash = await bcrypt.hash(resetCode.toString(), 10);
+        const resetCode = Math.round(Math.random() * 1000000)
+            .toString()
+            .padStart(6, "0");
+        const resetCodeHash = await bcrypt.hash(resetCode, 10);
 
         const challengeId = await DB.auth.createChallenge({
             type: "reset",
