@@ -36,9 +36,39 @@ async function createUser(
     return insertedId;
 }
 
+async function getChallenge(
+    id: string
+): Promise<typeof schema.challenges.$inferSelect | null> {
+    const res = await dbClient
+        .select()
+        .from(schema.challenges)
+        .where(eq(schema.challenges.id, id));
+
+    if (res.length == 0) return null;
+
+    const challenges = res[0];
+    return challenges;
+}
+
+async function createChallenge(
+    challenge: typeof schema.challenges.$inferInsert
+): Promise<string | null> {
+    const res = await dbClient
+        .insert(schema.challenges)
+        .values(challenge)
+        .returning({ insertedId: schema.challenges.id });
+
+    if (res.length == 0) return null;
+
+    const insertedId = res[0].insertedId;
+    return insertedId;
+}
+
 const auth = {
     getUser,
     createUser,
+    getChallenge,
+    createChallenge,
 };
 
 export default auth;
