@@ -1,4 +1,4 @@
-import auth from "~/server/middleware/auth";
+import auth from "~/utils/db/auth-actions";
 
 const DB = { auth };
 
