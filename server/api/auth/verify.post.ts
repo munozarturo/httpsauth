@@ -24,6 +24,12 @@ export default defineEventHandler(async (event) => {
                 message: "Email not in use.",
             });
 
+        if (user.verified)
+            return createError({
+                statusCode: 400,
+                message: "Email already verified.",
+            });
+
         const verificationCode = Math.round(Math.random() * 1000000);
         const verificationCodeHash = await bcrypt.hash(
             verificationCode.toString(),

@@ -64,11 +64,29 @@ async function createChallenge(
     return insertedId;
 }
 
+async function defeatChallenge(challengeId: string): Promise<void> {
+    const resUpdateChallenge = await dbClient
+        .update(schema.challenges)
+        .set({ defeated: true })
+        .where(eq(schema.challenges.id, challengeId))
+        .returning({ userId: schema.challenges.userId });
+
+    if (resUpdateChallenge.length == 0) return;
+
+    const userId = resUpdateChallenge[0].userId;
+
+    await dbClient
+        .update(schema.users)
+        .set({ verified: true })
+        .where(eq(schema.users.id, userId));
+}
+
 const auth = {
     getUser,
     createUser,
     getChallenge,
     createChallenge,
+    defeatChallenge,
 };
 
 export default auth;

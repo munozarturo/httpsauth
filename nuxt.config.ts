@@ -2,4 +2,9 @@
 export default defineNuxtConfig({
     devtools: { enabled: true },
     modules: ["@nuxtjs/tailwindcss"],
+    runtimeConfig: {
+        auth: {
+            verificationCodeExpiryTime: 60 * 5 * 1000, // 5 minutes (ms)
+        },
+    },
 });
