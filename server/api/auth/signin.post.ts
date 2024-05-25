@@ -23,6 +23,18 @@ export default defineEventHandler(async (event) => {
                 message: "Incorrect email or password.",
             });
 
+        const oldSessionToken = getCookie(event, "session-token") || null;
+        if (oldSessionToken) await DB.auth.closeSession(oldSessionToken);
+
+        const sessionToken = await DB.auth.createSession({ userId: user.id });
+        if (!sessionToken)
+            return createError({
+                statusCode: 500,
+                message: "Failed to create session.",
+            });
+
+        setCookie(event, "session-token", sessionToken);
+
         return {
             message: "Success.",
         };

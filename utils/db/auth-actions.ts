@@ -144,6 +144,9 @@ const auth = {
     attemptChallenge,
     verifyUser,
     resetPassword,
+    getSession,
+    createSession,
+    closeSession,
 };
 
 export default auth;
