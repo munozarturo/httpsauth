@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { boolean, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 import { sql } from "drizzle-orm";
 
@@ -10,6 +10,7 @@ export const users = pgTable("users", {
 
 export const sessions = pgTable("sessions", {
     id: uuid("id").primaryKey().defaultRandom(),
+    valid: boolean("valid").notNull().default(true),
     userId: uuid("user_id")
         .notNull()
         .references(() => users.id),
@@ -18,3 +19,5 @@ export const sessions = pgTable("sessions", {
         .notNull()
         .default(sql`NOW() + INTERVAL '1 day'`),
 });
+
+export const challenges = pgTable("challenges", {});
