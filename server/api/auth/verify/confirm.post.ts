@@ -29,13 +29,15 @@ export default defineEventHandler(async (event) => {
             });
 
         if (
-            Date.now() + config.auth.verificationCodeExpiryTime >
-            challenge.createdAt.getTime()
-        )
+            new Date(Date.now()).getTime() >
+            challenge.createdAt.getTime() +
+                config.auth.verificationCodeExpiryTime
+        ) {
             return createError({
                 statusCode: 400,
                 message: "Challenge expired.",
             });
+        }
 
         if (
             !(await bcrypt.compare(
