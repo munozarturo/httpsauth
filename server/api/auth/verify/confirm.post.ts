@@ -28,6 +28,12 @@ export default defineEventHandler(async (event) => {
                 message: "Challenge already defeated.",
             });
 
+        if (challenge.type !== "verification")
+            return createError({
+                statusCode: 400,
+                message: "Challenge purpose mismatch.",
+            });
+
         if (
             new Date(Date.now()).getTime() >
             challenge.createdAt.getTime() +

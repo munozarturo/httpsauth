@@ -1,4 +1,11 @@
-import { boolean, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import {
+    boolean,
+    pgEnum,
+    pgTable,
+    text,
+    timestamp,
+    uuid,
+} from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
     id: uuid("id").primaryKey().defaultRandom(),
@@ -16,8 +23,14 @@ export const sessions = pgTable("sessions", {
     createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+export const challengeType = pgEnum("challenge_type", [
+    "verification",
+    "reset",
+]);
+
 export const challenges = pgTable("challenges", {
     id: uuid("id").primaryKey().defaultRandom(),
+    type: challengeType("challenge_type").notNull(),
     userId: uuid("user_id")
         .notNull()
         .references(() => users.id),
