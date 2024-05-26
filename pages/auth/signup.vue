@@ -14,8 +14,7 @@
                 </div>
                 <div>
                     <label for="confirmPassword" class="block text-gray-700 font-bold mb-2">Confirm Password</label>
-                    <input type="password" id="confirmPassword" v-model="form.confirmPassword" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent" />
+                    <PasswordInput id="confirmPassword" v-model="form.confirmPassword" />
                 </div>
                 <div v-if="errorMessage" class="mt-2 px-2 py-2 rounded-md">
                     {{ errorMessage }}
@@ -41,6 +40,9 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import type { APIError } from "~/utils/errors/api";
+import { useToasterStore } from '~/stores/toaster';
+
+const toasterStore = useToasterStore();
 
 const router = useRouter();
 const form = ref<{
@@ -69,12 +71,16 @@ const submitForm = async () => {
             },
         });
 
+        toasterStore.addMessage("Account registered sucessfully.", "success");
+
         router.push(`/auth/verify?email=${form.value.email}`);
     } catch (e: any) {
         if (!e.data) errorMessage.value = "An unknown error occurred. Please try again.";
 
         const error = e as unknown as APIError;
         errorMessage.value = error.statusMessage;
+
+        toasterStore.addMessage(error.statusMessage, "error");
     }
 };
 </script>

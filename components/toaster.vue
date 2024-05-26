@@ -1,7 +1,9 @@
 <template>
     <transition-group name="toaster" tag="div" class="fixed bottom-4 right-4 z-50">
         <div v-for="message in messages" :key="message.id"
-            class="mb-4 rounded-lg bg-black text-white px-4 py-3 shadow-md cursor-pointer flex items-start max-w-xs">
+            class="mb-4 rounded-lg bg-black text-white px-4 py-3 shadow-md cursor-pointer flex items-start max-w-xs"
+            @mouseover="pauseTimer(message.id)" @mouseleave="resumeTimer(message.id)"
+            @click="dismissMessage(message.id)">
             <div class="mr-2 flex-shrink-0">
                 <svg v-if="message.type === 'success'" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
                     viewBox="0 0 24 24" stroke="currentColor">

@@ -19,6 +19,9 @@
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import type { APIError } from '~/utils/errors/api';
+import { useToasterStore } from '~/stores/toaster';
+
+const toasterStore = useToasterStore();
 
 const route = useRoute();
 const router = useRouter();
@@ -37,11 +40,15 @@ onMounted(async () => {
 
             challenge.value = res.challengeId;
             router.replace({ query: { challenge: challenge.value } });
+
+            toasterStore.addMessage("We sent a verification code to your email address.", "info");
         } catch (e: any) {
             if (!e.data) errorMessage.value = "An unknown error occurred. Please try again.";
 
             const error = e as unknown as APIError;
             errorMessage.value = error.statusMessage;
+
+            toasterStore.addMessage(error.statusMessage, "error");
         }
     } else {
         challenge.value = route.query.challenge as string;
@@ -58,12 +65,16 @@ const submitVerificationCode = async (code: string) => {
             },
         });
 
+        toasterStore.addMessage("Account verified succesfully.", "success");
+
         router.push('/auth/signin');
     } catch (e: any) {
         if (!e.data) errorMessage.value = "An unknown error occurred. Please try again.";
 
         const error = e as unknown as APIError;
         errorMessage.value = error.statusMessage;
+
+        toasterStore.addMessage(error.statusMessage, "error");
     }
 };
 </script>

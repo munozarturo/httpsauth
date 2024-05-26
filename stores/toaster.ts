@@ -12,10 +12,14 @@ const useToasterStore = defineStore("toaster", {
         lastId: Date.now(),
     }),
     actions: {
-        addMessage(message: string, type: "success" | "error" | "info") {
+        addMessage(
+            message: string,
+            type: "success" | "error" | "info",
+            duration: number = 10000
+        ) {
             const id = ++this.lastId;
             this.messages.push({ id, message, type });
-            setTimeout(() => this.removeMessage(id), 3000);
+            setTimeout(() => this.removeMessage(id), duration);
         },
         removeMessage(id: number) {
             this.messages = this.messages.filter(

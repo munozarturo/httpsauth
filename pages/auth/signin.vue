@@ -39,6 +39,9 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import type { APIError } from "~/utils/errors/api";
+import { useToasterStore } from '~/stores/toaster';
+
+const toasterStore = useToasterStore();
 
 const router = useRouter();
 const form = ref<{
@@ -58,12 +61,16 @@ const submitForm = async () => {
             body: form.value,
         });
 
+        toasterStore.addMessage(`Signed In Succesfully. Welcome ${form.value.email}`, "success");
+
         router.push("/");
     } catch (e: any) {
         if (!e.data) errorMessage.value = "An unknown error occurred. Please try again.";
 
         const error = e as unknown as APIError;
         errorMessage.value = error.statusMessage;
+
+        toasterStore.addMessage(error.statusMessage, "error");
     }
 };
 </script>
