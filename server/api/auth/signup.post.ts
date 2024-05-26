@@ -1,9 +1,10 @@
 import * as bcrypt from "bcrypt";
 
+import { ZodError, z } from "zod";
 import { zodEmail, zodPassword } from "~/utils/validation/common";
 
 import DB from "~/utils/db/actions";
-import { z } from "zod";
+import { statusMessageFromZodError } from "~/utils/errors/api";
 
 const bodyParser = z.object({
     email: zodEmail,
@@ -33,6 +34,13 @@ export default defineEventHandler(async (event) => {
         };
     } catch (error: any) {
         console.log(error);
+
+        if (error instanceof ZodError) {
+            return createError({
+                statusCode: 400,
+                statusMessage: statusMessageFromZodError(error),
+            });
+        }
 
         return createError({
             statusCode: 500,
