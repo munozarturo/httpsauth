@@ -23,8 +23,7 @@
                 <form @submit.prevent="submitReset" class="space-y-2">
                     <div>
                         <label for="password" class="block text-gray-700 font-bold mb-2">New Password</label>
-                        <input type="password" id="password" v-model="form.password" required
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent" />
+                        <PasswordInput id="password" v-model="form.password" />
                     </div>
                     <div>
                         <label for="confirmPassword" class="block text-gray-700 font-bold mb-2">Confirm Password</label>
