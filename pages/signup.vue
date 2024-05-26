@@ -1,7 +1,7 @@
 <template>
-  <div>
-    Home
-  </div>
+    <div>
+        Sign Up
+    </div>
 </template>
 
 <script lang="ts" setup>

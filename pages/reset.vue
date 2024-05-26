@@ -1,7 +1,7 @@
 <template>
-  <div>
-    Home
-  </div>
+    <div>
+        Reset
+    </div>
 </template>
 
 <script lang="ts" setup>
