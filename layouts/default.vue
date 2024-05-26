@@ -1,13 +1,11 @@
 <template>
   <div>
     <slot />
+    <Toaster />
   </div>
 </template>
 
-<script lang="ts" setup>
-
+<script setup lang="ts">
 </script>
 
-<style>
-
-</style>
+<style></style>
