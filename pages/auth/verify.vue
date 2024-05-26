@@ -2,11 +2,12 @@
     <div class="flex items-center justify-center min-h-screen bg-gray-100">
         <div class="bg-white p-8 rounded-lg shadow-md">
             <h2 class="text-2xl font-bold mb-6 text-center">Verify</h2>
-            <div v-if="!challengeId">
+            <div v-if="!challenge">
                 <p class="text-center text-gray-600">Sending Verification Code...</p>
+                <p v-if="errorMessage" class="mt-4 text-center">{{ errorMessage }}</p>
             </div>
             <div v-else>
-                <p class="text-center text-gray-700 mb-4">Enter the 6-digit verification code sent to your email:</p>
+                <p class="text-center text-gray-700 mb-4">Enter the 6-digit verification code sent to your email.</p>
                 <form @submit.prevent="submitVerificationCode" class="space-y-4">
                     <div>
                         <input type="text" v-model="verificationCode" maxlength="6" required
@@ -17,7 +18,7 @@
                         Verify
                     </button>
                 </form>
-                <p v-if="errorMessage" class="mt-4 text-center text-red-500">{{ errorMessage }}</p>
+                <p v-if="errorMessage" class="mt-4 text-center">{{ errorMessage }}</p>
             </div>
         </div>
     </div>
@@ -26,11 +27,12 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import type { APIError } from '~/utils/errors/api';
 
 const route = useRoute();
 const router = useRouter();
 const email = ref('');
-const challengeId = ref('');
+const challenge = ref('');
 const verificationCode = ref('');
 const errorMessage = ref('');
 
@@ -38,36 +40,36 @@ onMounted(async () => {
     email.value = route.query.email as string;
     if (email.value) {
         try {
-            const res = await $fetch<{ statusCode: Number, message: string, challengeId: string }>('/api/auth/verify', {
+            const res = await $fetch<{ challenge: string }>('/api/auth/verify', {
                 method: 'POST',
                 body: { email: email.value },
             });
-
-            challengeId.value = res.challengeId;
-            router.replace({ query: { challengeId: challengeId.value } });
-        } catch (error) {
-            console.error(error);
-            errorMessage.value = 'An error occurred during verification.';
+            challenge.value = res.challenge;
+            router.replace({ query: { challenge: challenge.value } });
+        } catch (e: any) {
+            if (!e.data) errorMessage.value = "An unknown error occurred. Please try again.";
+            const error = e as unknown as APIError;
+            errorMessage.value = error.statusMessage;
         }
     } else {
-        challengeId.value = route.query.challengeId as string;
+        challenge.value = route.query.challenge as string;
     }
 });
 
 const submitVerificationCode = async () => {
     try {
-        const res = await $fetch('/api/auth/verify/confirm', {
+        await $fetch('/api/auth/verify/confirm', {
             method: 'POST',
             body: {
-                challengeId: challengeId.value,
+                challenge: challenge.value,
                 token: verificationCode.value,
             },
         });
         router.push('/auth/signin');
-    } catch (error) {
-        console.error(error);
-
-        errorMessage.value = 'Invalid verification code. Please try again.';
+    } catch (e: any) {
+        if (!e.data) errorMessage.value = "An unknown error occurred. Please try again.";
+        const error = e as unknown as APIError;
+        errorMessage.value = error.statusMessage;
     }
 };
 </script>
