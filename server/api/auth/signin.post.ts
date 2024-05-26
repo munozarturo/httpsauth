@@ -36,7 +36,8 @@ export default defineEventHandler(async (event) => {
         setCookie(event, "session-token", sessionToken);
 
         return {
-            message: "Success.",
+            statusCode: 200,
+            statusMessage: "Success.",
         };
     } catch (error: any) {
         console.log(error);

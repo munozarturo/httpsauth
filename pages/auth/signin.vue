@@ -39,15 +39,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { string } from "zod";
-
-interface FormData {
-    email: string;
-    password: string;
-}
+import type { APIError } from "~/utils/errors/api";
 
 const router = useRouter();
-const form = ref<FormData>({
+const form = ref<{
+    email: string;
+    password: string;
+}>({
     email: "",
     password: "",
 });
@@ -56,23 +54,17 @@ const errorMessage = ref<string>("");
 
 const submitForm = async () => {
     try {
-        const res = await $fetch("/api/auth/signin", {
+        await $fetch("/api/auth/signin", {
             method: "POST",
             body: form.value,
         });
 
         router.push("/");
-    } catch (error: any) {
-        console.error(error);
+    } catch (e: any) {
+        if (!e.data) errorMessage.value = "An unknown error occurred. Please try again.";
 
-        const apiError = error as unknown as {
-            statusCode: Number;
-            statusMessage: string;
-        };
-
-        console.log("message", apiError.statusMessage)
-
-        errorMessage.value = "Unknown error. Please try again.";
+        const error = e as unknown as APIError;
+        errorMessage.value = error.statusMessage;
     }
 };
 </script>
