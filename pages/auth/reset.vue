@@ -80,8 +80,6 @@ const submitEmail = async () => {
 
         const error = e as unknown as APIError;
         errorMessage.value = error.statusMessage;
-
-        toasterStore.addMessage(error.statusMessage, "error");
     }
 };
 
@@ -104,8 +102,6 @@ const submitVerificationCode = async (code: string) => {
 
         const error = e as unknown as APIError;
         errorMessage.value = error.statusMessage;
-
-        toasterStore.addMessage(error.statusMessage, "error");
     }
 };
 
@@ -134,8 +130,6 @@ const submitReset = async () => {
 
         const error = e as unknown as APIError;
         errorMessage.value = error.statusMessage;
-
-        toasterStore.addMessage(error.statusMessage, "error");
     }
 };
 

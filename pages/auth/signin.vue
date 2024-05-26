@@ -69,8 +69,6 @@ const submitForm = async () => {
 
         const error = e as unknown as APIError;
         errorMessage.value = error.statusMessage;
-
-        toasterStore.addMessage(error.statusMessage, "error");
     }
 };
 </script>
