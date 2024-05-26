@@ -16,7 +16,7 @@
                 </form>
             </div>
             <div v-else-if="!resetToken">
-                <p class="text-center text-gray-700 mb-4">Enter the 6-digit verification code sent to your email.</p>
+                <p class="text-center text-gray-700 mb-4">Enter the verification code sent to your email.</p>
                 <VerificationCodeInput @submit="submitVerificationCode" />
             </div>
             <div v-else>
