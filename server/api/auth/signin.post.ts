@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
         if (!user || !(await bcrypt.compare(password, user.passwordHash)))
             return createError({
                 statusCode: 400,
-                message: "Incorrect email or password.",
+                statusMessage: "Incorrect email or password.",
             });
 
         const oldSessionToken = getCookie(event, "session-token") || null;
@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
         if (!sessionToken)
             return createError({
                 statusCode: 500,
-                message: "Failed to create session.",
+                statusMessage: "Failed to create session.",
             });
 
         setCookie(event, "session-token", sessionToken);
@@ -43,7 +43,7 @@ export default defineEventHandler(async (event) => {
 
         return createError({
             statusCode: 500,
-            message: "Internal Server Error.",
+            statusMessage: "Internal Server Error.",
         });
     }
 });

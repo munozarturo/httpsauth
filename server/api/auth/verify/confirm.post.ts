@@ -21,19 +21,19 @@ export default defineEventHandler(async (event) => {
         if (!challenge)
             return createError({
                 statusCode: 400,
-                message: "Challenge doesn't exist.",
+                statusMessage: "Challenge doesn't exist.",
             });
 
         if (challenge.used)
             return createError({
                 statusCode: 400,
-                message: "Challenge already used.",
+                statusMessage: "Challenge already used.",
             });
 
         if (challenge.type !== "verification")
             return createError({
                 statusCode: 400,
-                message: "Challenge purpose mismatch.",
+                statusMessage: "Challenge purpose mismatch.",
             });
 
         if (
@@ -43,14 +43,14 @@ export default defineEventHandler(async (event) => {
         ) {
             return createError({
                 statusCode: 400,
-                message: "Challenge expired.",
+                statusMessage: "Challenge expired.",
             });
         }
 
         if (!(await bcrypt.compare(token, challenge.tokenHash)))
             return createError({
                 statusCode: 400,
-                message: "Incorrect verification code.",
+                statusMessage: "Incorrect verification code.",
             });
 
         const userId = await DB.auth.attemptChallenge(challengeId);
@@ -58,20 +58,21 @@ export default defineEventHandler(async (event) => {
         if (!userId)
             return createError({
                 statusCode: 400,
-                message: "Failed to defeat challenge.",
+                statusMessage: "Failed to defeat challenge.",
             });
 
         await DB.auth.verifyUser(userId);
 
         return {
-            message: "Success.",
+            statusCode: 200,
+            statusMessage: "Success.",
         };
     } catch (error: any) {
         console.log(error);
 
         return createError({
             statusCode: 500,
-            message: "Internal Server Error.",
+            statusMessage: "Internal Server Error.",
         });
     }
 });

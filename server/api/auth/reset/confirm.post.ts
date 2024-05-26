@@ -22,19 +22,19 @@ export default defineEventHandler(async (event) => {
         if (!challenge)
             return createError({
                 statusCode: 400,
-                message: "Challenge doesn't exist.",
+                statusMessage: "Challenge doesn't exist.",
             });
 
         if (challenge.used)
             return createError({
                 statusCode: 400,
-                message: "Challenge already used.",
+                statusMessage: "Challenge already used.",
             });
 
         if (challenge.type !== "reset")
             return createError({
                 statusCode: 400,
-                message: "Challenge purpose mismatch.",
+                statusMessage: "Challenge purpose mismatch.",
             });
 
         if (
@@ -43,7 +43,7 @@ export default defineEventHandler(async (event) => {
         ) {
             return createError({
                 statusCode: 400,
-                message: "Challenge expired.",
+                statusMessage: "Challenge expired.",
             });
         }
 
@@ -52,13 +52,13 @@ export default defineEventHandler(async (event) => {
         if (!userId)
             return createError({
                 statusCode: 400,
-                message: "Failed to defeat challenge.",
+                statusMessage: "Failed to defeat challenge.",
             });
 
         if (!(await bcrypt.compare(token, challenge.tokenHash)))
             return createError({
                 statusCode: 400,
-                message: "Incorrect verification code.",
+                statusMessage: "Incorrect verification code.",
             });
 
         const passwordHash = await bcrypt.hash(password, 10);
@@ -66,14 +66,15 @@ export default defineEventHandler(async (event) => {
         await DB.auth.resetPassword(userId, passwordHash);
 
         return {
-            message: "Success.",
+            statusCode: 200,
+            statusMessage: "Success.",
         };
     } catch (error: any) {
         console.log(error);
 
         return createError({
             statusCode: 500,
-            message: "Internal Server Error.",
+            statusMessage: "Internal Server Error.",
         });
     }
 });

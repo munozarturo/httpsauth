@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
         if (emailInUse)
             return createError({
                 statusCode: 400,
-                message: "Email in use.",
+                statusMessage: "Email in use.",
             });
 
         const passwordHash = await bcrypt.hash(password, 10);
@@ -28,14 +28,15 @@ export default defineEventHandler(async (event) => {
         await DB.auth.createUser({ email, passwordHash });
 
         return {
-            message: "Success.",
+            statusCode: 200,
+            statusMessage: "Success.",
         };
     } catch (error: any) {
         console.log(error);
 
         return createError({
             statusCode: 500,
-            message: "Internal Server Error.",
+            statusMessage: "Internal Server Error.",
         });
     }
 });

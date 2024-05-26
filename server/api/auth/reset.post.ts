@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
         if (!user)
             return createError({
                 statusCode: 400,
-                message: "Email not in use.",
+                statusMessage: "Email not in use.",
             });
 
         const token = Math.round(Math.random() * 1000000)
@@ -48,7 +48,8 @@ export default defineEventHandler(async (event) => {
         });
 
         return {
-            message: "Success.",
+            statusCode: 200,
+            statusMessage: "Success.",
             challengeId,
         };
     } catch (error: any) {
@@ -56,7 +57,7 @@ export default defineEventHandler(async (event) => {
 
         return createError({
             statusCode: 500,
-            message: "Internal Server Error.",
+            statusMessage: "Internal Server Error.",
         });
     }
 });

@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
         if (!sessionToken)
             return createError({
                 statusCode: 400,
-                message: "No session to sign out of.",
+                statusMessage: "No session to sign out of.",
             });
 
         await DB.auth.closeSession(sessionToken);
@@ -16,14 +16,15 @@ export default defineEventHandler(async (event) => {
         deleteCookie(event, "session-token");
 
         return {
-            message: "Success.",
+            statusCode: 200,
+            statusMessage: "Success.",
         };
     } catch (error: any) {
         console.log(error);
 
         return createError({
             statusCode: 500,
-            message: "Internal Server Error.",
+            statusMessage: "Internal Server Error.",
         });
     }
 });

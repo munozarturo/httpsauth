@@ -39,6 +39,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { string } from "zod";
 
 interface FormData {
     email: string;
@@ -63,6 +64,13 @@ const submitForm = async () => {
         router.push("/");
     } catch (error: any) {
         console.error(error);
+
+        const apiError = error as unknown as {
+            statusCode: Number;
+            statusMessage: string;
+        };
+
+        console.log("message", apiError.statusMessage)
 
         errorMessage.value = "Unknown error. Please try again.";
     }

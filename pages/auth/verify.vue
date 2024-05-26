@@ -66,6 +66,7 @@ const submitVerificationCode = async () => {
         router.push('/auth/signin');
     } catch (error) {
         console.error(error);
+
         errorMessage.value = 'Invalid verification code. Please try again.';
     }
 };
