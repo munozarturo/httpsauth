@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
         if (!user)
             return createError({
                 statusCode: 400,
-                statusMessage: "Email not in use.",
+                statusMessage: "An account with this email does not exist.",
             });
 
         if (user.verified)
@@ -63,7 +63,7 @@ export default defineEventHandler(async (event) => {
 
         return createError({
             statusCode: 500,
-            statusMessage: "Internal Server Error.",
+            statusMessage: "Unknown Error.",
         });
     }
 });

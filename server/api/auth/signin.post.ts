@@ -43,7 +43,7 @@ export default defineEventHandler(async (event) => {
 
         return createError({
             statusCode: 500,
-            statusMessage: "Internal Server Error.",
+            statusMessage: "Unknown Error.",
         });
     }
 });

@@ -20,19 +20,19 @@ export default defineEventHandler(async (event) => {
         const challenge = await DB.auth.getChallenge(challengeId);
         if (!challenge)
             return createError({
-                statusCode: 400,
+                statusCode: 404,
                 statusMessage: "Challenge doesn't exist.",
             });
 
         if (challenge.used)
             return createError({
-                statusCode: 400,
+                statusCode: 410,
                 statusMessage: "Challenge already used.",
             });
 
         if (challenge.type !== "verification")
             return createError({
-                statusCode: 400,
+                statusCode: 404,
                 statusMessage: "Challenge purpose mismatch.",
             });
 
@@ -42,7 +42,7 @@ export default defineEventHandler(async (event) => {
                 config.auth.verificationCodeExpiryTime
         ) {
             return createError({
-                statusCode: 400,
+                statusCode: 410,
                 statusMessage: "Challenge expired.",
             });
         }
@@ -72,7 +72,7 @@ export default defineEventHandler(async (event) => {
 
         return createError({
             statusCode: 500,
-            statusMessage: "Internal Server Error.",
+            statusMessage: "Unknown Error.",
         });
     }
 });

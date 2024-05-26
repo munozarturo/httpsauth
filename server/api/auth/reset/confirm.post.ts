@@ -21,19 +21,19 @@ export default defineEventHandler(async (event) => {
         const challenge = await DB.auth.getChallenge(challengeId);
         if (!challenge)
             return createError({
-                statusCode: 400,
+                statusCode: 404,
                 statusMessage: "Challenge doesn't exist.",
             });
 
         if (challenge.used)
             return createError({
-                statusCode: 400,
+                statusCode: 410,
                 statusMessage: "Challenge already used.",
             });
 
         if (challenge.type !== "reset")
             return createError({
-                statusCode: 400,
+                statusCode: 404,
                 statusMessage: "Challenge purpose mismatch.",
             });
 
@@ -42,10 +42,16 @@ export default defineEventHandler(async (event) => {
             challenge.createdAt.getTime() + config.auth.resetCodeExpiryTime
         ) {
             return createError({
-                statusCode: 400,
+                statusCode: 410,
                 statusMessage: "Challenge expired.",
             });
         }
+
+        if (!(await bcrypt.compare(token, challenge.tokenHash)))
+            return createError({
+                statusCode: 400,
+                statusMessage: "Incorrect verification code.",
+            });
 
         const userId = await DB.auth.attemptChallenge(challengeId);
 
@@ -53,12 +59,6 @@ export default defineEventHandler(async (event) => {
             return createError({
                 statusCode: 400,
                 statusMessage: "Failed to defeat challenge.",
-            });
-
-        if (!(await bcrypt.compare(token, challenge.tokenHash)))
-            return createError({
-                statusCode: 400,
-                statusMessage: "Incorrect verification code.",
             });
 
         const passwordHash = await bcrypt.hash(password, 10);
@@ -74,7 +74,7 @@ export default defineEventHandler(async (event) => {
 
         return createError({
             statusCode: 500,
-            statusMessage: "Internal Server Error.",
+            statusMessage: "Unknown Error.",
         });
     }
 });

@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
         if (emailInUse)
             return createError({
                 statusCode: 400,
-                statusMessage: "Email in use.",
+                statusMessage: "Email already in use.",
             });
 
         const passwordHash = await bcrypt.hash(password, 10);
@@ -36,7 +36,7 @@ export default defineEventHandler(async (event) => {
 
         return createError({
             statusCode: 500,
-            statusMessage: "Internal Server Error.",
+            statusMessage: "Unknown Error.",
         });
     }
 });
