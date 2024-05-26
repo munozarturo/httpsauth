@@ -65,10 +65,13 @@ const submitForm = async () => {
     try {
         const res = await $fetch("/api/auth/signup", {
             method: "POST",
-            body: form.value,
+            body: {
+                email: form.value.email,
+                password: form.value.password
+            },
         });
 
-        router.push("/");
+        router.push(`/auth/verify?email=${form.value.email}`);
     } catch (error: any) {
         console.error(error);
         errorMessage.value = "Unknown error. Please try again.";
