@@ -74,6 +74,8 @@ const submitEmail = async () => {
         challenge.value = res.challengeId;
         router.replace({ query: { challenge: challenge.value } });
 
+        errorMessage.value = "";
+
         toasterStore.addMessage("We sent a verification code to your email address", "info");
     } catch (e: any) {
         if (!e.data) errorMessage.value = "An unknown error occurred. Please try again.";
@@ -92,9 +94,12 @@ const submitVerificationCode = async (code: string) => {
                 token: code,
             },
         });
+
         resetToken.value = res.resetToken;
         challenge.value = res.challengeId;
         router.replace({ query: { challenge: challenge.value, "reset-token": resetToken.value } });
+
+        errorMessage.value = "";
 
         toasterStore.addMessage("Identity verified", "success");
     } catch (e: any) {
@@ -123,6 +128,8 @@ const submitReset = async () => {
         });
 
         toasterStore.addMessage("Password reset", "info");
+
+        errorMessage.value = "";
 
         router.push("/auth/signin");
     } catch (e: any) {
