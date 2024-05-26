@@ -13,10 +13,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
 const emit = defineEmits(['submit']);
-
 const verificationCodeDigits = ref(Array(6).fill(''));
 
 const handleDigitInput = (index: number) => {
@@ -36,4 +35,11 @@ const submitVerificationCode = () => {
     const code = verificationCodeDigits.value.join('');
     emit('submit', code);
 };
+
+watch(verificationCodeDigits, (newValue) => {
+    const isAllDigitsFilled = newValue.every((digit) => digit !== '');
+    if (isAllDigitsFilled) {
+        submitVerificationCode();
+    }
+}, { deep: true });
 </script>
