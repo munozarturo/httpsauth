@@ -4,19 +4,17 @@ import { useRouter } from "vue-router";
 
 const router = useRouter();
 
-interface SignOutResponse {
-    message: string;
-}
-
 const signOut = async () => {
     try {
-        await $fetch<SignOutResponse>("/api/auth/signout", {
+        await $fetch("/api/auth/signout", {
             method: "POST",
         });
 
         router.push("/");
     } catch (error: any) {
         console.error(error);
+
+        router.push("/");
     }
 };
 

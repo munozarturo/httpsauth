@@ -12,7 +12,6 @@ export default defineEventHandler(async (event) => {
 
         await DB.auth.closeSession(sessionToken);
 
-        setCookie(event, "session-token", "");
         deleteCookie(event, "session-token");
 
         return {
