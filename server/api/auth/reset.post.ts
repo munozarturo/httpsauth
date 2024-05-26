@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
         const tokenHash = await bcrypt.hash(token, 10);
 
         const challengeId = await DB.auth.createChallenge({
-            type: "reset",
+            type: "reset-request",
             userId: user.id,
             tokenHash: tokenHash,
         });

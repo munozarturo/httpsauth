@@ -1,15 +1,15 @@
 import * as bcrypt from "bcrypt";
 
 import { ZodError, z } from "zod";
-import { zodLongToken, zodPassword, zodUUID } from "~/utils/validation/common";
+import { zodToken, zodUUID } from "~/utils/validation/common";
 
 import DB from "~/utils/db/actions";
+import { generateRandomString } from "~/utils/core";
 import { statusMessageFromZodError } from "~/utils/errors/api";
 
 const bodyParser = z.object({
     challengeId: zodUUID,
-    token: zodLongToken,
-    password: zodPassword,
+    token: zodToken,
 });
 
 export default defineEventHandler(async (event) => {
@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event);
 
     try {
-        const { challengeId, token, password } = bodyParser.parse(body);
+        const { challengeId, token } = bodyParser.parse(body);
 
         const challenge = await DB.auth.getChallenge(challengeId);
         if (!challenge)
@@ -32,7 +32,7 @@ export default defineEventHandler(async (event) => {
                 statusMessage: "Challenge already used.",
             });
 
-        if (challenge.type !== "reset-confirmation")
+        if (challenge.type !== "reset-request")
             return createError({
                 statusCode: 404,
                 statusMessage: "Challenge purpose mismatch.",
@@ -62,13 +62,23 @@ export default defineEventHandler(async (event) => {
                 statusMessage: "Failed to defeat challenge.",
             });
 
-        const passwordHash = await bcrypt.hash(password, 10);
+        const user = await DB.auth.getUser({ userId });
+        if (user && !user.verified) DB.auth.verifyUser(userId);
 
-        await DB.auth.resetPassword(userId, passwordHash);
+        const resetToken = generateRandomString(128);
+        const tokenHash = await bcrypt.hash(resetToken, 10);
+
+        const confirmChallengeId = await DB.auth.createChallenge({
+            type: "reset-confirmation",
+            userId,
+            tokenHash,
+        });
 
         return {
             statusCode: 200,
             statusMessage: "Success.",
+            resetToken,
+            challengeId: confirmChallengeId,
         };
     } catch (error: any) {
         console.log(error);
