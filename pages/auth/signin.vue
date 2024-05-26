@@ -15,7 +15,18 @@
                 </div>
                 <button type="submit"
                     class="w-full bg-black text-white font-bold py-2 px-4 rounded-md hover:bg-gray-800">Sign In</button>
+                <div class="text-center mt-4">
+                    <a href="/auth/reset" class="text-sm text-gray-600 hover:text-gray-800">Forgot Password?</a>
+                </div>
             </form>
+            <div class="mt-6 flex items-center">
+                <div class="border-t border-gray-300 flex-grow mr-3"></div>
+                <div class="text-gray-600">or</div>
+                <div class="border-t border-gray-300 flex-grow ml-3"></div>
+            </div>
+            <div class="mt-6 text-center">
+                <a href="/auth/signup" class="text-black font-bold hover:underline">Sign Up</a>
+            </div>
         </div>
     </div>
 </template>
@@ -33,13 +44,12 @@ const form = ref({
 
 const submitForm = async () => {
     try {
-        // Send form data to the server for registration
         const res = await $fetch('/api/auth/signin', {
             method: 'POST',
             body: form.value
         });
+
         router.push("/");
-        // Handle successful registration, e.g., redirect to dashboard or show success message
     } catch (error) {
         console.error(error);
         // Handle registration error, e.g., show error message to the user
