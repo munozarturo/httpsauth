@@ -2,7 +2,7 @@
     <div class="flex items-center justify-center min-h-screen bg-gray-100">
         <div class="bg-white p-8 rounded-lg shadow-md">
             <h2 class="text-2xl font-bold mb-6 text-center">Reset Password</h2>
-            <div v-if="!challengeId">
+            <div v-if="!challenge">
                 <form @submit.prevent="submitEmail" class="space-y-2">
                     <div>
                         <label for="email" class="block text-gray-700 font-bold mb-2">Email</label>
@@ -15,16 +15,20 @@
                     </button>
                 </form>
             </div>
+            <div v-else-if="!resetToken">
+                <p class="text-center text-gray-700 mb-4">Enter the 6-digit verification code sent to your email.</p>
+                <VerificationCodeInput @submit="submitVerificationCode" />
+            </div>
             <div v-else>
                 <form @submit.prevent="submitReset" class="space-y-2">
                     <div>
-                        <label for="code" class="block text-gray-700 font-bold mb-2">6-Digit Code</label>
-                        <input type="text" id="code" v-model="form.code" required maxlength="6"
+                        <label for="password" class="block text-gray-700 font-bold mb-2">New Password</label>
+                        <input type="password" id="password" v-model="form.password" required
                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent" />
                     </div>
                     <div>
-                        <label for="password" class="block text-gray-700 font-bold mb-2">New Password</label>
-                        <input type="password" id="password" v-model="form.password" required
+                        <label for="confirmPassword" class="block text-gray-700 font-bold mb-2">Confirm Password</label>
+                        <input type="password" id="confirmPassword" v-model="form.confirmPassword" required
                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent" />
                     </div>
                     <button type="submit"
@@ -33,7 +37,7 @@
                     </button>
                 </form>
             </div>
-            <div v-if="errorMessage" class="mt-4 text-center text-red-500">{{ errorMessage }}</div>
+            <p v-if="errorMessage" class="mt-4 text-center">{{ errorMessage }}</p>
         </div>
     </div>
 </template>
@@ -41,54 +45,86 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import type { APIError } from '~/utils/errors/api';
 
 interface FormData {
     email: string;
-    code: string;
     password: string;
+    confirmPassword: string;
 }
 
 const route = useRoute();
 const router = useRouter();
 const form = ref<FormData>({
     email: '',
-    code: '',
     password: '',
+    confirmPassword: '',
 });
-const challengeId = ref('');
+const challenge = ref('');
+const resetToken = ref('');
 const errorMessage = ref('');
 
 const submitEmail = async () => {
     try {
-        const res = await $fetch<{ message: string, challengeId: string }>('/api/auth/reset', {
+        const res = await $fetch<{ challengeId: string }>('/api/auth/reset', {
             method: 'POST',
             body: { email: form.value.email },
         });
-        challengeId.value = res.challengeId;
-        router.replace({ query: { challengeId: challengeId.value } });
-    } catch (error: any) {
-        console.error(error);
-        errorMessage.value = 'An error occurred. Please try again.';
+        challenge.value = res.challengeId;
+        router.replace({ query: { challenge: challenge.value } });
+    } catch (e: any) {
+        if (!e.data) errorMessage.value = "An unknown error occurred. Please try again.";
+
+        const error = e as unknown as APIError;
+        errorMessage.value = error.statusMessage;
+    }
+};
+
+const submitVerificationCode = async (code: string) => {
+    try {
+        const res = await $fetch<{ resetToken: string; challengeId: string }>('/api/auth/reset/verify', {
+            method: 'POST',
+            body: {
+                challengeId: challenge.value,
+                token: code,
+            },
+        });
+        resetToken.value = res.resetToken;
+        challenge.value = res.challengeId;
+        router.replace({ query: { challenge: challenge.value, 'reset-token': resetToken.value } });
+    } catch (e: any) {
+        if (!e.data) errorMessage.value = "An unknown error occurred. Please try again.";
+
+        const error = e as unknown as APIError;
+        errorMessage.value = error.statusMessage;
     }
 };
 
 const submitReset = async () => {
+    if (form.value.password !== form.value.confirmPassword) {
+        errorMessage.value = 'Passwords do not match.';
+        return;
+    }
+
     try {
-        const res = await $fetch('/api/auth/reset/confirm', {
+        await $fetch('/api/auth/reset/confirm', {
             method: 'POST',
             body: {
-                challengeId: challengeId.value,
-                token: form.value.code,
+                challengeId: challenge.value,
+                token: resetToken.value,
                 password: form.value.password,
             },
         });
         router.push('/auth/signin');
-    } catch (error: any) {
-        console.error(error);
-        errorMessage.value = 'Invalid verification code or password. Please try again.';
+    } catch (e: any) {
+        if (!e.data) errorMessage.value = "An unknown error occurred. Please try again.";
+
+        const error = e as unknown as APIError;
+        errorMessage.value = error.statusMessage;
     }
 };
 
-// Check if challengeId exists in the URL query params
-challengeId.value = route.query.challengeId as string;
+// Check if challenge and reset-token exist in the URL query params
+challenge.value = route.query.challenge as string;
+resetToken.value = route.query['reset-token'] as string;
 </script>
