@@ -13,7 +13,7 @@ const signOut = async () => {
             method: "POST",
         });
 
-        toasterStore.addMessage("Signed Out.", "success");
+        toasterStore.addMessage("Signed Out", "success");
 
         router.push("/");
     } catch (error: any) {

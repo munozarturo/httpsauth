@@ -71,7 +71,7 @@ const submitForm = async () => {
             },
         });
 
-        toasterStore.addMessage("Account registered sucessfully.", "success");
+        toasterStore.addMessage("Account registered", "success");
 
         router.push(`/auth/verify?email=${form.value.email}`);
     } catch (e: any) {

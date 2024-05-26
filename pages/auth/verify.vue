@@ -41,7 +41,7 @@ onMounted(async () => {
             challenge.value = res.challengeId;
             router.replace({ query: { challenge: challenge.value } });
 
-            toasterStore.addMessage("We sent a verification code to your email address.", "info");
+            toasterStore.addMessage("We sent a verification code to your email address", "info");
         } catch (e: any) {
             if (!e.data) errorMessage.value = "An unknown error occurred. Please try again.";
 
@@ -65,7 +65,7 @@ const submitVerificationCode = async (code: string) => {
             },
         });
 
-        toasterStore.addMessage("Account verified succesfully.", "success");
+        toasterStore.addMessage("Account verified", "success");
 
         router.push('/auth/signin');
     } catch (e: any) {

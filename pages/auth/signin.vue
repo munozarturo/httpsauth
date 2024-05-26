@@ -61,7 +61,7 @@ const submitForm = async () => {
             body: form.value,
         });
 
-        toasterStore.addMessage(`Signed In Succesfully. Welcome ${form.value.email}`, "success");
+        toasterStore.addMessage("Signed In", "success");
 
         router.push("/");
     } catch (e: any) {
