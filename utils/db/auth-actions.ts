@@ -11,6 +11,7 @@ async function getUser(args: {
 
     const { email, userId } = args;
 
+    if (!email && !userId) return null;
     if (email) query.where(eq(schema.users.email, email));
     if (userId) query.where(eq(schema.users.id, userId));
     const res = await query.execute();
