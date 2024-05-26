@@ -113,7 +113,6 @@ const submitVerificationCode = async (code: string) => {
 const submitReset = async () => {
     if (form.value.password !== form.value.confirmPassword) {
         errorMessage.value = "Passwords do not match.";
-        toasterStore.addMessage("Passwords do not match.", "error");
         return;
     }
 
