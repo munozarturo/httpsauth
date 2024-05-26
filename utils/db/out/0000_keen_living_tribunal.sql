@@ -1,5 +1,5 @@
 DO $$ BEGIN
- CREATE TYPE "public"."challenge_type" AS ENUM('verification', 'reset');
+ CREATE TYPE "public"."challenge_type" AS ENUM('verification', 'reset-request', 'reset-confirmation');
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS "challenges" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "sessions" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"valid" boolean DEFAULT true NOT NULL,
+	"active" boolean DEFAULT true NOT NULL,
 	"user_id" uuid NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL
 );

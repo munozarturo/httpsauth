@@ -1,5 +1,5 @@
 {
-  "id": "c427b923-5430-4be0-9a66-a5aa5d690e2a",
+  "id": "53c83b3c-f884-427f-840a-41878bcc4e57",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "6",
   "dialect": "postgresql",
@@ -79,8 +79,8 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "valid": {
-          "name": "valid",
+        "active": {
+          "name": "active",
           "type": "boolean",
           "primaryKey": false,
           "notNull": true,
@@ -170,7 +170,8 @@
       "schema": "public",
       "values": [
         "verification",
-        "reset"
+        "reset-request",
+        "reset-confirmation"
       ]
     }
   },

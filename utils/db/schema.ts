@@ -25,7 +25,8 @@ export const sessions = pgTable("sessions", {
 
 export const challengeType = pgEnum("challenge_type", [
     "verification",
-    "reset",
+    "reset-request",
+    "reset-confirmation",
 ]);
 
 export const challenges = pgTable("challenges", {
