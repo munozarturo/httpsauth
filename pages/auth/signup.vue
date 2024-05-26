@@ -41,15 +41,14 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import type { APIError } from "~/utils/errors/api";
 
-interface FormData {
+const router = useRouter();
+const form = ref<{
     email: string;
     password: string;
     confirmPassword: string;
-}
-
-const router = useRouter();
-const form = ref<FormData>({
+}>({
     email: "",
     password: "",
     confirmPassword: "",
@@ -63,7 +62,7 @@ const submitForm = async () => {
     }
 
     try {
-        const res = await $fetch("/api/auth/signup", {
+        await $fetch("/api/auth/signup", {
             method: "POST",
             body: {
                 email: form.value.email,
@@ -72,9 +71,11 @@ const submitForm = async () => {
         });
 
         router.push(`/auth/verify?email=${form.value.email}`);
-    } catch (error: any) {
-        console.error(error);
-        errorMessage.value = "Unknown error. Please try again.";
+    } catch (e: any) {
+        if (!e.data) errorMessage.value = "An unknown error occurred. Please try again.";
+
+        const error = e as unknown as APIError;
+        errorMessage.value = error.statusMessage;
     }
 };
 </script>
