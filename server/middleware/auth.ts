@@ -1,7 +1,6 @@
 import DB from "~/utils/db/actions";
-import { defineNuxtRouteMiddleware } from "nuxt/app";
 
-export default defineNuxtRouteMiddleware(async (event) => {
+export default defineEventHandler(async (event) => {
     const sessionToken = getCookie(event, "session-token");
 
     if (sessionToken) {
