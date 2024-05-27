@@ -40,7 +40,7 @@ export default defineEventHandler(async (event) => {
 
         if (user.verified)
             return createError({
-                statusCode: 400,
+                statusCode: 409,
                 statusMessage: "Email already verified.",
             });
 

@@ -4,12 +4,23 @@
             <h2 class="text-2xl font-bold mb-6 text-center">Verify</h2>
             <div v-if="!challenge">
                 <p v-if="errorMessage" class="mt-4 text-center">{{ errorMessage }}</p>
+                <p v-else-if="retryTimer > 0" class="mt-4 text-center text-gray-600">
+                    There has been an error, trying again in {{ retryTimer }} seconds.
+                </p>
                 <p v-else class="text-center text-gray-600">Sending Verification Code...</p>
             </div>
             <div v-else>
                 <p class="text-center text-gray-700 mb-4">Enter the verification code sent to your email.</p>
                 <VerificationCodeInput @submit="submitVerificationCode" />
                 <p v-if="errorMessage" class="mt-4 text-center">{{ errorMessage }}</p>
+                <div class="text-center mt-4">
+                    <button v-if="timer > 0" class="text-sm text-gray-600" disabled>
+                        Resend code in {{ timer }} seconds
+                    </button>
+                    <button v-else class="text-sm text-gray-600 hover:text-gray-800" @click="resendVerificationCode">
+                        Resend code?
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -28,30 +39,72 @@ const router = useRouter();
 const email = ref('');
 const challenge = ref('');
 const errorMessage = ref('');
+const timer = ref(0);
+const timerInterval = ref<NodeJS.Timeout | null>(null);
+const retryTimer = ref(0);
+const retryTimerInterval = ref<NodeJS.Timeout | null>(null);
 
 onMounted(async () => {
     email.value = route.query.email as string;
     if (email.value) {
-        try {
-            const res = await $fetch<{ challengeId: string }>('/api/auth/verify', {
-                method: 'POST',
-                body: { email: email.value },
-            });
-
-            challenge.value = res.challengeId;
-            router.replace({ query: { challenge: challenge.value } });
-
-            toasterStore.addMessage("We sent a verification code to your email address", "info");
-        } catch (e: any) {
-            if (!e.data) errorMessage.value = "An unknown error occurred. Please try again.";
-
-            const error = e as unknown as APIError;
-            errorMessage.value = error.statusMessage;
-        }
+        await sendVerificationCode();
     } else {
         challenge.value = route.query.challenge as string;
     }
 });
+
+const sendVerificationCode = async () => {
+    try {
+        const res = await $fetch<{ challengeId: string }>('/api/auth/verify', {
+            method: 'POST',
+            body: { email: email.value },
+        });
+
+        challenge.value = res.challengeId;
+        router.replace({ query: { challenge: challenge.value } });
+
+        toasterStore.addMessage("We sent a verification code to your email address", "info");
+        startTimer();
+    } catch (e: any) {
+        if (!e.data) errorMessage.value = "An unknown error occurred. Please try again.";
+
+        const error = e as unknown as APIError;
+        if (error.statusCode === 429) {
+            startRetryTimer();
+        } else if (error.statusCode === 409) {
+            toasterStore.addMessage("Email already verified", "success");
+
+            router.push('/auth/signin');
+        } else {
+            errorMessage.value = error.statusMessage;
+        }
+    }
+};
+
+const startTimer = () => {
+    timer.value = 60; // Set the timer to 60 seconds
+    timerInterval.value = setInterval(() => {
+        timer.value--;
+        if (timer.value === 0) {
+            clearInterval(timerInterval.value!);
+        }
+    }, 1000);
+};
+
+const startRetryTimer = () => {
+    retryTimer.value = 60; // Set the retry timer to 60 seconds
+    retryTimerInterval.value = setInterval(() => {
+        retryTimer.value--;
+        if (retryTimer.value === 0) {
+            clearInterval(retryTimerInterval.value!);
+            sendVerificationCode(); // Retry sending the verification code
+        }
+    }, 1000);
+};
+
+const resendVerificationCode = async () => {
+    await sendVerificationCode();
+};
 
 const submitVerificationCode = async (code: string) => {
     try {
