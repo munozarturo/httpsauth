@@ -68,6 +68,9 @@ const submitForm = async () => {
         if (!e.data) errorMessage.value = "An unknown error occurred. Please try again.";
 
         const error = e as unknown as APIError;
+
+        if (error.statusCode == 403) router.push(`/auth/verify?email=${form.value.email}`);
+
         errorMessage.value = error.statusMessage;
     }
 };

@@ -24,6 +24,12 @@ export default defineEventHandler(async (event) => {
                 statusMessage: "Incorrect email or password.",
             });
 
+        if (!user.verified)
+            return createError({
+                statusCode: 403,
+                statusMessage: "Email not verified.",
+            });
+
         const oldSessionToken = getCookie(event, "session-token") || null;
         if (oldSessionToken) await DB.auth.closeSession(oldSessionToken);
 
