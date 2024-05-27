@@ -25,8 +25,7 @@ export const sessions = pgTable("sessions", {
 
 export const challengeType = pgEnum("challenge_type", [
     "verification",
-    "reset-request",
-    "reset-confirmation",
+    "password-reset",
 ]);
 
 export const challenges = pgTable("challenges", {
@@ -42,6 +41,7 @@ export const challenges = pgTable("challenges", {
 
 export const communicationType = pgEnum("communication_type", [
     "verification-email",
+    "password-reset-email",
 ]);
 
 export const communications = pgTable("communications", {

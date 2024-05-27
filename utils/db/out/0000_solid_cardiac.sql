@@ -1,11 +1,11 @@
 DO $$ BEGIN
- CREATE TYPE "public"."challenge_type" AS ENUM('verification', 'reset-request', 'reset-confirmation');
+ CREATE TYPE "public"."challenge_type" AS ENUM('verification', 'password-reset');
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- CREATE TYPE "public"."communication_type" AS ENUM('verification-email');
+ CREATE TYPE "public"."communication_type" AS ENUM('verification-email', 'password-reset-email');
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

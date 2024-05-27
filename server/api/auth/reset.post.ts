@@ -3,8 +3,10 @@ import * as bcrypt from "bcrypt";
 import { ZodError, z } from "zod";
 
 import DB from "~/utils/db/actions";
+import { generateRandomString } from "~/utils/core";
 import { sendEmail } from "~/utils/aws/ses";
 import { statusMessageFromZodError } from "~/utils/errors/api";
+import { useCompiler } from "#vue-email";
 import { zodEmail } from "~/utils/validation/common";
 
 const bodyParser = z.object({
@@ -15,6 +17,10 @@ export default defineEventHandler(async (event) => {
     const DOMAIN = process.env.DOMAIN;
     if (!DOMAIN) throw new Error("`DOMAIN` environment variable is undefined.");
 
+    const NUXT_URL = process.env.NUXT_URL;
+    if (!NUXT_URL)
+        throw new Error("`NUXT_URL` environment variable is undefined.");
+
     const body = await readBody(event);
 
     try {
@@ -22,7 +28,7 @@ export default defineEventHandler(async (event) => {
 
         const recentCommunications = await DB.auth.getCommunications({
             to: email,
-            type: "verification-email",
+            type: "password-reset-email",
             fromTimestamp: new Date(Date.now() - 1 * 60 * 1000),
         });
         if (recentCommunications.length > 0)
@@ -34,42 +40,46 @@ export default defineEventHandler(async (event) => {
         const user = await DB.auth.getUser({ email });
         if (!user)
             return createError({
-                statusCode: 400,
-                statusMessage:
-                    "An account with this email address does not exist.",
+                statusCode: 200,
+                statusMessage: "Success.",
             });
 
-        const token = Math.round(Math.random() * 1000000)
-            .toString()
-            .padStart(6, "0");
+        const token = generateRandomString(128);
         const tokenHash = await bcrypt.hash(token, 10);
 
         const challengeId = await DB.auth.createChallenge({
-            type: "reset-request",
+            type: "password-reset",
             userId: user.id,
             tokenHash: tokenHash,
         });
 
         const communicationId = await DB.auth.logCommunication({
-            type: "verification-email",
+            type: "password-reset-email",
             to: email,
         });
+
+        const resetURL = `${NUXT_URL}/auth/reset?challenge=${challengeId}&token=${token}`;
+        const emailBody: { html: string; text: string } = await useCompiler(
+            "reset-password.vue",
+            {
+                props: {
+                    resetURL,
+                    communicationId,
+                },
+            }
+        );
 
         await sendEmail({
             source: `${DOMAIN} <verification@auth.${DOMAIN}>`,
             destination: { to: email },
             subject: "Reset Your Password",
-            body: {
-                html: `${token}`,
-                text: `${token}`,
-            },
+            body: emailBody,
             replyTo: `contact@${DOMAIN}`,
         });
 
         return {
             statusCode: 200,
             statusMessage: "Success.",
-            challengeId,
         };
     } catch (error: any) {
         console.log(error);

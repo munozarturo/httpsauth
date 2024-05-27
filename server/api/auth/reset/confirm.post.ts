@@ -32,7 +32,7 @@ export default defineEventHandler(async (event) => {
                 statusMessage: "Challenge already used.",
             });
 
-        if (challenge.type !== "reset-confirmation")
+        if (challenge.type !== "password-reset")
             return createError({
                 statusCode: 404,
                 statusMessage: "Challenge purpose mismatch.",

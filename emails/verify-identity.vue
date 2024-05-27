@@ -20,7 +20,7 @@ const previewText = "Verify your email address";
             <EBody class="font-sans">
                 <EContainer class="min-h-fit flex items-center justify-center">
                     <div class="bg-white p-8 rounded-lg shadow-md max-w-md mx-auto">
-                        <EHeading class="text-3xl font-bold mb-6 text-center">
+                        <EHeading class="text-2xl font-bold mb-6 text-center">
                             Verify Your Email Address
                         </EHeading>
                         <EText class="text-gray-700 mb-6">

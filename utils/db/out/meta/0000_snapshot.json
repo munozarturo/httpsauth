@@ -1,5 +1,5 @@
 {
-  "id": "418505ee-5bca-497c-9121-6263756329e8",
+  "id": "8b0c6d7a-1ece-4b2a-9ff0-9d929d26c239",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "6",
   "dialect": "postgresql",
@@ -207,15 +207,15 @@
       "schema": "public",
       "values": [
         "verification",
-        "reset-request",
-        "reset-confirmation"
+        "password-reset"
       ]
     },
     "public.communication_type": {
       "name": "communication_type",
       "schema": "public",
       "values": [
-        "verification-email"
+        "verification-email",
+        "password-reset-email"
       ]
     }
   },

@@ -2,7 +2,7 @@
     <div class="flex items-center justify-center min-h-screen bg-gray-100">
         <div class="bg-white p-8 rounded-lg shadow-md">
             <h2 class="text-2xl font-bold mb-6 text-center">Reset Password</h2>
-            <div v-if="!challenge">
+            <div v-if="!emailSent && !challenge">
                 <form @submit.prevent="submitEmail" class="space-y-2">
                     <div>
                         <label for="email" class="block text-gray-700 font-bold mb-2">Email</label>
@@ -15,24 +15,14 @@
                     </button>
                 </form>
                 <p v-if="errorMessage" class="mt-4 text-center">{{ errorMessage }}</p>
-                <p v-else-if="retryTimer > 0" class="mt-4 text-center text-gray-600">
-                    There has been an error, trying again in {{ retryTimer }} seconds.
+            </div>
+            <div v-else-if="emailSent">
+                <p class="text-center text-gray-700">
+                    If there is an account associated with the provided email address, we have sent an email with
+                    account recovery instructions.
                 </p>
             </div>
-            <div v-else-if="!resetToken">
-                <p class="text-center text-gray-700 mb-4">Enter the verification code sent to your email.</p>
-                <VerificationCodeInput @submit="submitVerificationCode" />
-                <p v-if="errorMessage" class="mt-4 text-center">{{ errorMessage }}</p>
-                <div class="text-center mt-4">
-                    <button v-if="timer > 0" class="text-sm text-gray-600" disabled>
-                        Resend code in {{ timer }} seconds
-                    </button>
-                    <button v-else class="text-sm text-gray-600 hover:text-gray-800" @click="resendVerificationCode">
-                        Resend code?
-                    </button>
-                </div>
-            </div>
-            <div v-else>
+            <div v-else-if="challenge && token">
                 <form @submit.prevent="submitReset" class="space-y-2">
                     <div>
                         <label for="password" class="block text-gray-700 font-bold mb-2">New Password</label>
@@ -74,92 +64,29 @@ const form = ref<FormData>({
     password: "",
     confirmPassword: "",
 });
-const challenge = ref("");
-const resetToken = ref("");
+const emailSent = ref(false);
 const errorMessage = ref("");
-const timer = ref(0);
-const timerInterval = ref<NodeJS.Timeout | null>(null);
-const retryTimer = ref(0);
-const retryTimerInterval = ref<NodeJS.Timeout | null>(null);
+const challenge = ref("");
+const token = ref("");
 
 const submitEmail = async () => {
     try {
-        const res = await $fetch<{ challengeId: string }>("/api/auth/reset", {
+        await $fetch("/api/auth/reset", {
             method: "POST",
             body: { email: form.value.email },
         });
-        challenge.value = res.challengeId;
-        router.replace({ query: { challenge: challenge.value } });
 
+        emailSent.value = true;
         errorMessage.value = "";
-
-        toasterStore.addMessage("We sent a verification code to your email address", "info");
-        startTimer();
     } catch (e: any) {
         if (!e.data) errorMessage.value = "An unknown error occurred. Please try again.";
 
         const error = e as unknown as APIError;
         if (error.statusCode === 429) {
-            startRetryTimer();
-        } else if (error.statusCode === 404) {
-            toasterStore.addMessage("Email not found", "error");
-
-            router.push('/auth/signin');
+            errorMessage.value = "Too many requests. Please wait and try again later.";
         } else {
             errorMessage.value = error.statusMessage;
         }
-    }
-};
-
-const startTimer = () => {
-    // auth.verificationCommunicationRateLimitMs
-    timer.value = 60;
-    timerInterval.value = setInterval(() => {
-        timer.value--;
-        if (timer.value === 0) {
-            clearInterval(timerInterval.value!);
-        }
-    }, 1000);
-};
-
-const startRetryTimer = () => {
-    // auth.verificationCommunicationRateLimitMs
-    retryTimer.value = 60;
-    retryTimerInterval.value = setInterval(() => {
-        retryTimer.value--;
-        if (retryTimer.value === 0) {
-            clearInterval(retryTimerInterval.value!);
-            resendVerificationCode();
-        }
-    }, 1000);
-};
-
-const resendVerificationCode = async () => {
-    await submitEmail();
-};
-
-const submitVerificationCode = async (code: string) => {
-    try {
-        const res = await $fetch<{ resetToken: string; challengeId: string }>("/api/auth/reset/verify", {
-            method: "POST",
-            body: {
-                challengeId: challenge.value,
-                token: code,
-            },
-        });
-
-        resetToken.value = res.resetToken;
-        challenge.value = res.challengeId;
-        router.replace({ query: { challenge: challenge.value, "reset-token": resetToken.value } });
-
-        errorMessage.value = "";
-
-        toasterStore.addMessage("Identity verified", "success");
-    } catch (e: any) {
-        if (!e.data) errorMessage.value = "An unknown error occurred. Please try again.";
-
-        const error = e as unknown as APIError;
-        errorMessage.value = error.statusMessage;
     }
 };
 
@@ -174,15 +101,13 @@ const submitReset = async () => {
             method: "POST",
             body: {
                 challengeId: challenge.value,
-                token: resetToken.value,
+                token: token.value,
                 password: form.value.password,
             },
         });
 
         toasterStore.addMessage("Password reset", "success");
-
         errorMessage.value = "";
-
         router.push("/auth/signin");
     } catch (e: any) {
         if (!e.data) errorMessage.value = "An unknown error occurred. Please try again.";
@@ -192,7 +117,7 @@ const submitReset = async () => {
     }
 };
 
-// Check if challenge and reset-token exist in the URL query params
+// Check if challenge and token exist in the URL query params
 challenge.value = route.query.challenge as string;
-resetToken.value = route.query["reset-token"] as string;
+token.value = route.query.token as string;
 </script>
