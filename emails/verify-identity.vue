@@ -19,7 +19,7 @@ const previewText = "Verify your email address";
             <EPreview>{{ previewText }}</EPreview>
             <EBody class="font-sans">
                 <EContainer class="min-h-fit flex items-center justify-center">
-                    <div class="bg-white p-8 rounded-lg shadow-md max-w-md mx-auto">
+                    <div class="bg-white p-8 rounded-lg shadow-md max-w-lg mx-auto">
                         <EHeading class="text-2xl font-bold mb-6 text-center">
                             Verify Your Email Address
                         </EHeading>
