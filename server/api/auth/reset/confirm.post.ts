@@ -44,14 +44,14 @@ export default defineEventHandler(async (event) => {
         ) {
             return createError({
                 statusCode: 410,
-                statusMessage: "Challenge expired.",
+                statusMessage: "Verification token has expired.",
             });
         }
 
         if (!(await bcrypt.compare(token, challenge.tokenHash)))
             return createError({
                 statusCode: 400,
-                statusMessage: "Incorrect verification code.",
+                statusMessage: "Incorrect token.",
             });
 
         const userId = await DB.auth.attemptChallenge(challengeId);

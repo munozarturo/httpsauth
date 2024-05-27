@@ -44,7 +44,7 @@ export default defineEventHandler(async (event) => {
         ) {
             return createError({
                 statusCode: 410,
-                statusMessage: "Challenge expired.",
+                statusMessage: "Verification token has expired.",
             });
         }
 

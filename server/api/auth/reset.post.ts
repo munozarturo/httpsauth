@@ -40,7 +40,7 @@ export default defineEventHandler(async (event) => {
         });
 
         await sendEmail({
-            source: `${DOMAIN} <password-reset@auth.${DOMAIN}>`,
+            source: `${DOMAIN} <verification@auth.${DOMAIN}>`,
             destination: { to: email },
             subject: "Reset Your Password",
             body: {
