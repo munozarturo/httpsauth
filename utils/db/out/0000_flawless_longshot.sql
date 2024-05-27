@@ -4,6 +4,12 @@ EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
+DO $$ BEGIN
+ CREATE TYPE "public"."communication_type" AS ENUM('verification-email');
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "challenges" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"challenge_type" "challenge_type" NOT NULL,
@@ -11,6 +17,13 @@ CREATE TABLE IF NOT EXISTS "challenges" (
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"token_hash" text NOT NULL,
 	"used" boolean DEFAULT false NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "communications" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"to" text NOT NULL,
+	"communication_type" "communication_type" NOT NULL,
+	"sent_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "sessions" (

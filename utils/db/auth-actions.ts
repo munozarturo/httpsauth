@@ -1,7 +1,8 @@
 import * as schema from "~/utils/db/schema";
 
+import { and, eq, gt } from "drizzle-orm";
+
 import { dbClient } from "./client";
-import { eq } from "drizzle-orm";
 
 async function getUser(args: {
     email?: string;
@@ -137,6 +138,41 @@ async function closeSession(sessionId: string): Promise<void> {
         .where(eq(schema.sessions.id, sessionId));
 }
 
+async function logCommunication(
+    communication: typeof schema.communications.$inferInsert
+): Promise<string | null> {
+    const res = await dbClient
+        .insert(schema.communications)
+        .values(communication)
+        .returning({ insertedId: schema.communications.id })
+        .execute();
+
+    if (res.length == 0) return null;
+
+    const insertedId = res[0].insertedId;
+    return insertedId;
+}
+
+async function getCommunications(args: {
+    to: string;
+    fromTimestamp: Date;
+}): Promise<(typeof schema.communications.$inferSelect)[]> {
+    const { to, fromTimestamp } = args;
+
+    const res = await dbClient
+        .select()
+        .from(schema.communications)
+        .where(
+            and(
+                eq(schema.communications.to, to),
+                gt(schema.communications.sentAt, fromTimestamp)
+            )
+        )
+        .execute();
+
+    return res;
+}
+
 const auth = {
     getUser,
     createUser,
@@ -148,6 +184,8 @@ const auth = {
     getSession,
     createSession,
     closeSession,
+    logCommunication,
+    getCommunications,
 };
 
 export default auth;

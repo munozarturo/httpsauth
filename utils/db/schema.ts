@@ -39,3 +39,14 @@ export const challenges = pgTable("challenges", {
     tokenHash: text("token_hash").notNull(),
     used: boolean("used").notNull().default(false),
 });
+
+export const communicationType = pgEnum("communication_type", [
+    "verification-email",
+]);
+
+export const communications = pgTable("communications", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    to: text("to").notNull(),
+    type: communicationType("communication_type").notNull(),
+    sentAt: timestamp("sent_at").notNull().defaultNow(),
+});
