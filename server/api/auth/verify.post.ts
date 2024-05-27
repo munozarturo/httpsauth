@@ -15,6 +15,8 @@ export default defineEventHandler(async (event) => {
     const DOMAIN = process.env.DOMAIN;
     if (!DOMAIN) throw new Error("`DOMAIN` environment variable is undefined.");
 
+    const config = useRuntimeConfig();
+
     const body = await readBody(event);
 
     try {
@@ -23,7 +25,9 @@ export default defineEventHandler(async (event) => {
         const recentCommunications = await DB.auth.getCommunications({
             to: email,
             type: "verification-email",
-            fromTimestamp: new Date(Date.now() - 1 * 60 * 1000),
+            fromTimestamp: new Date(
+                Date.now() - config.auth.verificationCommunicationRateLimitMs
+            ),
         });
         if (recentCommunications.length > 0)
             return createError({

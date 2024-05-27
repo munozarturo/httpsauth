@@ -40,7 +40,7 @@ export default defineEventHandler(async (event) => {
 
         if (
             new Date(Date.now()).getTime() >
-            challenge.createdAt.getTime() + config.auth.resetCodeExpiryTime
+            challenge.createdAt.getTime() + config.auth.resetCodeExpiryTimeMs
         ) {
             return createError({
                 statusCode: 410,

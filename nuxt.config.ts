@@ -4,8 +4,9 @@ export default defineNuxtConfig({
     modules: ["@nuxtjs/tailwindcss", "@pinia/nuxt"],
     runtimeConfig: {
         auth: {
-            verificationCodeExpiryTime: 60 * 5 * 1000, // 5 minutes (ms)
-            resetCodeExpiryTime: 60 * 5 * 1000, // 5 minutes (ms)
+            verificationCodeExpiryTimeMs: 60 * 5 * 1000, // 5 minutes (ms)
+            resetCodeExpiryTimeMs: 60 * 5 * 1000, // 5 minutes (ms)
+            verificationCommunicationRateLimitMs: 60 * 1000, // 1 communication per minute (ms)
         },
     },
 });
