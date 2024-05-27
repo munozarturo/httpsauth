@@ -14,10 +14,23 @@
                         Submit
                     </button>
                 </form>
+                <p v-if="errorMessage" class="mt-4 text-center">{{ errorMessage }}</p>
+                <p v-else-if="retryTimer > 0" class="mt-4 text-center text-gray-600">
+                    There has been an error, trying again in {{ retryTimer }} seconds.
+                </p>
             </div>
             <div v-else-if="!resetToken">
                 <p class="text-center text-gray-700 mb-4">Enter the verification code sent to your email.</p>
                 <VerificationCodeInput @submit="submitVerificationCode" />
+                <p v-if="errorMessage" class="mt-4 text-center">{{ errorMessage }}</p>
+                <div class="text-center mt-4">
+                    <button v-if="timer > 0" class="text-sm text-gray-600" disabled>
+                        Resend code in {{ timer }} seconds
+                    </button>
+                    <button v-else class="text-sm text-gray-600 hover:text-gray-800" @click="resendVerificationCode">
+                        Resend code?
+                    </button>
+                </div>
             </div>
             <div v-else>
                 <form @submit.prevent="submitReset" class="space-y-2">
@@ -34,8 +47,8 @@
                         Reset Password
                     </button>
                 </form>
+                <p v-if="errorMessage" class="mt-4 text-center">{{ errorMessage }}</p>
             </div>
-            <p v-if="errorMessage" class="mt-4 text-center">{{ errorMessage }}</p>
         </div>
     </div>
 </template>
@@ -64,6 +77,10 @@ const form = ref<FormData>({
 const challenge = ref("");
 const resetToken = ref("");
 const errorMessage = ref("");
+const timer = ref(0);
+const timerInterval = ref<NodeJS.Timeout | null>(null);
+const retryTimer = ref(0);
+const retryTimerInterval = ref<NodeJS.Timeout | null>(null);
 
 const submitEmail = async () => {
     try {
@@ -77,12 +94,48 @@ const submitEmail = async () => {
         errorMessage.value = "";
 
         toasterStore.addMessage("We sent a verification code to your email address", "info");
+        startTimer();
     } catch (e: any) {
         if (!e.data) errorMessage.value = "An unknown error occurred. Please try again.";
 
         const error = e as unknown as APIError;
-        errorMessage.value = error.statusMessage;
+        if (error.statusCode === 429) {
+            startRetryTimer();
+        } else if (error.statusCode === 404) {
+            toasterStore.addMessage("Email not found", "error");
+
+            router.push('/auth/signin');
+        } else {
+            errorMessage.value = error.statusMessage;
+        }
     }
+};
+
+const startTimer = () => {
+    // auth.verificationCommunicationRateLimitMs
+    timer.value = 60;
+    timerInterval.value = setInterval(() => {
+        timer.value--;
+        if (timer.value === 0) {
+            clearInterval(timerInterval.value!);
+        }
+    }, 1000);
+};
+
+const startRetryTimer = () => {
+    // auth.verificationCommunicationRateLimitMs
+    retryTimer.value = 60;
+    retryTimerInterval.value = setInterval(() => {
+        retryTimer.value--;
+        if (retryTimer.value === 0) {
+            clearInterval(retryTimerInterval.value!);
+            resendVerificationCode();
+        }
+    }, 1000);
+};
+
+const resendVerificationCode = async () => {
+    await submitEmail();
 };
 
 const submitVerificationCode = async (code: string) => {
@@ -126,7 +179,7 @@ const submitReset = async () => {
             },
         });
 
-        toasterStore.addMessage("Password reset", "info");
+        toasterStore.addMessage("Password reset", "success");
 
         errorMessage.value = "";
 

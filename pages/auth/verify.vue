@@ -44,8 +44,6 @@ const timerInterval = ref<NodeJS.Timeout | null>(null);
 const retryTimer = ref(0);
 const retryTimerInterval = ref<NodeJS.Timeout | null>(null);
 
-const config = useRuntimeConfig();
-
 onMounted(async () => {
     email.value = route.query.email as string;
     if (email.value) {
@@ -84,7 +82,8 @@ const sendVerificationCode = async () => {
 };
 
 const startTimer = () => {
-    timer.value = config.auth.verificationCommunicationRateLimitMs / 1000;
+    // auth.verificationCommunicationRateLimitMs
+    timer.value = 60;
     timerInterval.value = setInterval(() => {
         timer.value--;
         if (timer.value === 0) {
@@ -94,12 +93,13 @@ const startTimer = () => {
 };
 
 const startRetryTimer = () => {
-    retryTimer.value = config.auth.verificationCommunicationRateLimitMs / 1000;
+    // auth.verificationCommunicationRateLimitMs
+    retryTimer.value = 60;
     retryTimerInterval.value = setInterval(() => {
         retryTimer.value--;
         if (retryTimer.value === 0) {
             clearInterval(retryTimerInterval.value!);
-            sendVerificationCode();
+            resendVerificationCode();
         }
     }, 1000);
 };
