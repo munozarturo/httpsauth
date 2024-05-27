@@ -66,7 +66,7 @@ export default defineEventHandler(async (event) => {
         });
 
         const emailBody: { html: string; text: string } = await useCompiler(
-            "reset-password.vue",
+            "verify-identity.vue",
             {
                 props: {
                     token,
