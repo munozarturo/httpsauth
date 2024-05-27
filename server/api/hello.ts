@@ -1,4 +1,3 @@
-import { sendEmail } from "~/utils/aws/ses";
 import { useCompiler } from "#vue-email";
 
 export default defineEventHandler(async (event) => {

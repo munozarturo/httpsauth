@@ -5,6 +5,7 @@ import { ZodError, z } from "zod";
 import DB from "~/utils/db/actions";
 import { sendEmail } from "~/utils/aws/ses";
 import { statusMessageFromZodError } from "~/utils/errors/api";
+import { useCompiler } from "#vue-email";
 import { zodEmail } from "~/utils/validation/common";
 
 const bodyParser = z.object({
@@ -64,14 +65,21 @@ export default defineEventHandler(async (event) => {
             to: email,
         });
 
+        const emailBody: { html: string; text: string } = await useCompiler(
+            "reset-password.vue",
+            {
+                props: {
+                    token,
+                    communicationId,
+                },
+            }
+        );
+
         await sendEmail({
             source: `${DOMAIN} <verification@auth.${DOMAIN}>`,
             destination: { to: email },
             subject: "Verify Your Email Address",
-            body: {
-                html: `${token}`,
-                text: `${token}`,
-            },
+            body: emailBody,
             replyTo: `contact@${DOMAIN}`,
         });
 
