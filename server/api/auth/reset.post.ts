@@ -20,6 +20,17 @@ export default defineEventHandler(async (event) => {
     try {
         const { email } = bodyParser.parse(body);
 
+        const recentCommunications = await DB.auth.getCommunications({
+            to: email,
+            type: "verification-email",
+            fromTimestamp: new Date(Date.now() - 1 * 60 * 1000),
+        });
+        if (recentCommunications.length > 0)
+            return createError({
+                statusCode: 429,
+                statusMessage: "Too many requests, please wait.",
+            });
+
         const user = await DB.auth.getUser({ email });
         if (!user)
             return createError({
@@ -37,6 +48,11 @@ export default defineEventHandler(async (event) => {
             type: "reset-request",
             userId: user.id,
             tokenHash: tokenHash,
+        });
+
+        const communicationId = await DB.auth.logCommunication({
+            type: "verification-email",
+            to: email,
         });
 
         await sendEmail({

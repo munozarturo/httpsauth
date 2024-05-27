@@ -1,6 +1,6 @@
 import * as schema from "~/utils/db/schema";
 
-import { and, eq, gt } from "drizzle-orm";
+import { type InferSelectModel, and, eq, gt } from "drizzle-orm";
 
 import { dbClient } from "./client";
 
@@ -156,8 +156,10 @@ async function logCommunication(
 async function getCommunications(args: {
     to: string;
     fromTimestamp: Date;
+    // not sure how to get enum types some other way
+    type: (typeof schema.communications)["_"]["columns"]["type"]["_"]["enumValues"][number];
 }): Promise<(typeof schema.communications.$inferSelect)[]> {
-    const { to, fromTimestamp } = args;
+    const { to, fromTimestamp, type } = args;
 
     const res = await dbClient
         .select()
@@ -165,7 +167,10 @@ async function getCommunications(args: {
         .where(
             and(
                 eq(schema.communications.to, to),
-                gt(schema.communications.sentAt, fromTimestamp)
+                and(
+                    eq(schema.communications.type, type),
+                    gt(schema.communications.sentAt, fromTimestamp)
+                )
             )
         )
         .execute();
