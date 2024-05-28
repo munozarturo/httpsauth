@@ -1,5 +1,18 @@
 import DB from "~/utils/db/actions";
 
+export interface AuthContext {
+    user: {
+        id: string;
+        email: string;
+        verified: boolean;
+    };
+    session: {
+        token: string;
+        active: boolean;
+        createdAt: Date;
+    };
+}
+
 export default defineEventHandler(async (event) => {
     const sessionToken = getCookie(event, "session-token");
 
@@ -14,13 +27,15 @@ export default defineEventHandler(async (event) => {
                 const { userId, id: token, ...session } = sessionData;
                 const { passwordHash, ...user } = userData;
 
-                event.context.auth = {
+                const authContext: AuthContext = {
                     user,
                     session: {
                         ...session,
                         token,
                     },
                 };
+
+                event.context.auth = authContext;
             }
         }
     }
