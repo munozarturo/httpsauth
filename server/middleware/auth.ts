@@ -1,6 +1,6 @@
 import DB from "~/utils/db/actions";
 
-export interface AuthContext {
+export type AuthContext = {
     user: {
         id: string;
         email: string;
@@ -11,12 +11,12 @@ export interface AuthContext {
         active: boolean;
         createdAt: Date;
     };
-}
+} | null;
 
 // explicit type declaration event.context.auth
 declare module "h3" {
     interface H3EventContext {
-        auth: AuthContext | null;
+        auth: AuthContext;
     }
 }
 
