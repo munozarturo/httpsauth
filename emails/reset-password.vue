@@ -36,7 +36,7 @@ const previewText = "Reset your password";
                             If the button doesn't work, you can copy and paste the following URL into your browser:
                         </EText>
                         <div class="mb-8">
-                            <div class="bg-gray-100 p-4 rounded-md text-center text-lg">
+                            <div class="bg-gray-100 p-4 rounded-md text-md">
                                 {{ resetURL }}
                             </div>
                         </div>
