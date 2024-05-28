@@ -13,6 +13,13 @@ export interface AuthContext {
     };
 }
 
+// explicit type declaration event.context.auth
+declare module "h3" {
+    interface H3EventContext {
+        auth: AuthContext | null;
+    }
+}
+
 export default defineEventHandler(async (event) => {
     const sessionToken = getCookie(event, "session-token");
 
@@ -27,15 +34,15 @@ export default defineEventHandler(async (event) => {
                 const { userId, id: token, ...session } = sessionData;
                 const { passwordHash, ...user } = userData;
 
-                const authContext: AuthContext = {
+                event.context.auth = {
                     user,
                     session: {
                         ...session,
                         token,
                     },
                 };
-
-                event.context.auth = authContext;
+            } else {
+                event.context.auth = null;
             }
         }
     }
