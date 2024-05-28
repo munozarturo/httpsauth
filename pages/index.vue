@@ -1,7 +1,7 @@
 <template>
   <div>
     <ClientOnly>
-      <p v-if="authStore.context">{{ authStore.context }}</p>
+      <p v-if="authStore.isAuthenticated">{{ authStore.context }}</p>
     </ClientOnly>
   </div>
 </template>

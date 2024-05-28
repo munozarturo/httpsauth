@@ -6,11 +6,10 @@ export default defineNuxtRouteMiddleware(async () => {
 
     if (!authStore.context) {
         try {
-            console.log("populating auth store");
-            const authContext = await $fetch<AuthContext>("/api/auth/session");
-            authStore.setAuthContext(authContext);
+            const context = await $fetch<AuthContext>("/api/auth/session");
+            authStore.setAuthContext(context);
         } catch (error) {
-            console.error("Failed to fetch auth context:", error);
+            console.error("Failed to fetch auth context.", error);
         }
     }
 });
