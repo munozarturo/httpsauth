@@ -1,11 +1,11 @@
 <template>
-  <div>
-    <slot />
-    <Toaster />
-  </div>
+	<div>
+		<Navbar />
+		<slot />
+		<Toaster />
+	</div>
 </template>
 
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <style></style>
