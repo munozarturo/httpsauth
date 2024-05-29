@@ -1,13 +1,13 @@
 {
-  "version": "6",
-  "dialect": "postgresql",
-  "entries": [
-    {
-      "idx": 0,
-      "version": "6",
-      "when": 1716834094647,
-      "tag": "0000_solid_cardiac",
-      "breakpoints": true
-    }
-  ]
+	"version": "6",
+	"dialect": "postgresql",
+	"entries": [
+		{
+			"idx": 0,
+			"version": "6",
+			"when": 1716834094647,
+			"tag": "0000_solid_cardiac",
+			"breakpoints": true
+		}
+	]
 }
