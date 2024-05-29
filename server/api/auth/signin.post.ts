@@ -7,58 +7,67 @@ import DB from "~/utils/db/actions";
 import { statusMessageFromZodError } from "~/utils/errors/api";
 
 const bodyParser = z.object({
-    email: zodEmail,
-    password: zodPassword,
+	email: zodEmail,
+	password: zodPassword,
 });
 
 export default defineEventHandler(async (event) => {
-    const body = await readBody(event);
+	const NODE_ENV = process.env.NODE_ENV;
+	if (!NODE_ENV)
+		throw new Error("`NODE_ENV` environment variable is undefined.");
 
-    try {
-        const { email, password } = bodyParser.parse(body);
+	const body = await readBody(event);
 
-        const user = await DB.auth.getUser({ email });
-        if (!user || !(await bcrypt.compare(password, user.passwordHash)))
-            return createError({
-                statusCode: 400,
-                statusMessage: "Incorrect email or password.",
-            });
+	try {
+		const { email, password } = bodyParser.parse(body);
 
-        if (!user.verified)
-            return createError({
-                statusCode: 403,
-                statusMessage: "Email not verified.",
-            });
+		const user = await DB.auth.getUser({ email });
+		if (!user || !(await bcrypt.compare(password, user.passwordHash)))
+			return createError({
+				statusCode: 400,
+				statusMessage: "Incorrect email or password.",
+			});
 
-        const oldSessionToken = getCookie(event, "session-token") || null;
-        if (oldSessionToken) await DB.auth.closeSession(oldSessionToken);
+		if (!user.verified)
+			return createError({
+				statusCode: 403,
+				statusMessage: "Email not verified.",
+			});
 
-        const sessionToken = await DB.auth.createSession({ userId: user.id });
-        if (!sessionToken)
-            return createError({
-                statusCode: 500,
-                statusMessage: "Failed to create session.",
-            });
+		const oldSessionToken = getCookie(event, "session-token") || null;
+		if (oldSessionToken) await DB.auth.closeSession(oldSessionToken);
 
-        setCookie(event, "session-token", sessionToken);
+		const sessionToken = await DB.auth.createSession({ userId: user.id });
+		if (!sessionToken)
+			return createError({
+				statusCode: 500,
+				statusMessage: "Failed to create session.",
+			});
 
-        return {
-            statusCode: 200,
-            statusMessage: "Success.",
-        };
-    } catch (error: any) {
-        console.log(error);
+		setCookie(event, "session-token", sessionToken, {
+			httpOnly: true,
+			secure: NODE_ENV === "production",
+			sameSite: "strict",
+			maxAge: 60 * 60 * 24 * 7, // 7 days
+		});
 
-        if (error instanceof ZodError) {
-            return createError({
-                statusCode: 400,
-                statusMessage: statusMessageFromZodError(error),
-            });
-        }
+		return {
+			statusCode: 200,
+			statusMessage: "Success.",
+		};
+	} catch (error: any) {
+		console.log(error);
 
-        return createError({
-            statusCode: 500,
-            statusMessage: "Unknown Error.",
-        });
-    }
+		if (error instanceof ZodError) {
+			return createError({
+				statusCode: 400,
+				statusMessage: statusMessageFromZodError(error),
+			});
+		}
+
+		return createError({
+			statusCode: 500,
+			statusMessage: "Unknown Error.",
+		});
+	}
 });
