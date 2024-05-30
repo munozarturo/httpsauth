@@ -3,7 +3,7 @@ import * as bcrypt from "bcrypt";
 import { ZodError, z } from "zod";
 
 import DB from "~/utils/db/actions";
-import { generateRandomString } from "~/utils/core";
+import { generateToken } from "~/utils/core";
 import { sendEmail } from "~/utils/aws/ses";
 import { statusMessageFromZodError } from "~/utils/errors/api";
 import { useCompiler } from "#vue-email";
@@ -44,7 +44,7 @@ export default defineEventHandler(async (event) => {
 				statusMessage: "Success.",
 			});
 
-		const token = generateRandomString(128);
+		const token = generateToken(64);
 		const tokenHash = await bcrypt.hash(token, 10);
 
 		const challengeId = await DB.auth.createChallenge({

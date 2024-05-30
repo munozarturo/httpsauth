@@ -1,15 +1,7 @@
-function generateRandomString(length: number): string {
-	const characters =
-		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-	let result = "";
+import * as crypto from "crypto";
 
-	for (let i = 0; i < length; i++) {
-		result += characters.charAt(
-			Math.floor(Math.random() * characters.length)
-		);
-	}
-
-	return result;
+function generateToken(bytes: number): string {
+	return crypto.randomBytes(bytes).toString("hex");
 }
 
-export { generateRandomString };
+export { generateToken };
