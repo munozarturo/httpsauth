@@ -16,6 +16,8 @@ export default defineEventHandler(async (event) => {
 	if (!NODE_ENV)
 		throw new Error("`NODE_ENV` environment variable is undefined.");
 
+	const config = useRuntimeConfig();
+
 	const body = await readBody(event);
 
 	try {
@@ -48,7 +50,7 @@ export default defineEventHandler(async (event) => {
 			httpOnly: true,
 			secure: NODE_ENV === "production",
 			sameSite: "strict",
-			maxAge: 60 * 60 * 24 * 7, // 7 days
+			maxAge: config.auth.sessionExpiryTimeMs / 1000,
 		});
 
 		return {

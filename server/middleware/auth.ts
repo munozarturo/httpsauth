@@ -1,17 +1,4 @@
-import DB from "~/utils/db/actions";
-
-export type AuthContext = {
-	user: {
-		id: string;
-		email: string;
-		verified: boolean;
-	};
-	session: {
-		token: string;
-		active: boolean;
-		createdAt: Date;
-	};
-} | null;
+import DB, { AuthContext } from "~/utils/db/actions";
 
 // explicit type declaration event.context.auth
 declare module "h3" {
@@ -21,29 +8,58 @@ declare module "h3" {
 }
 
 export default defineEventHandler(async (event) => {
-	const sessionToken = getCookie(event, "session-token");
+	const NODE_ENV = process.env.NODE_ENV;
+	if (!NODE_ENV)
+		throw new Error("`NODE_ENV` environment variable is undefined.");
 
-	if (sessionToken) {
-		const sessionData = await DB.auth.getSession(sessionToken);
-		const userId = sessionData?.userId;
+	event.context.auth = null;
 
-		if (userId) {
-			const userData = await DB.auth.getUser({ userId });
+	const config = useRuntimeConfig();
 
-			if (sessionData && userData) {
-				const { userId, id: token, ...session } = sessionData;
-				const { passwordHash, ...user } = userData;
+	const sessionToken: string | null | undefined = getCookie(
+		event,
+		"session-token"
+	);
 
-				event.context.auth = {
-					user,
-					session: {
-						...session,
-						token,
-					},
-				};
-			} else {
-				event.context.auth = null;
-			}
-		}
+	if (!sessionToken) return;
+
+	var context = await DB.auth.getSession(sessionToken);
+	if (!context) {
+		deleteCookie(event, "session-token");
+		return;
 	}
+	var { user, session } = context;
+
+	const currentTime = Date.now();
+	if (
+		currentTime >
+		new Date(session.createdAt).getTime() +
+			config.auth.sessionRefreshThresholdMs
+	) {
+		const refreshedSessionToken = await DB.auth.refreshSession(
+			sessionToken
+		);
+
+		if (!refreshedSessionToken) return;
+
+		var context = await DB.auth.getSession(refreshedSessionToken);
+		if (!context) return;
+
+		var { user, session } = context;
+
+		setCookie(event, "session-token", sessionToken, {
+			httpOnly: true,
+			secure: NODE_ENV === "production",
+			sameSite: "strict",
+			maxAge: config.auth.sessionExpiryTimeMs / 1000,
+		});
+	}
+
+	event.context.auth = {
+		user,
+		session: {
+			...session,
+			token: sessionToken,
+		},
+	};
 });

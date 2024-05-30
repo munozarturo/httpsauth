@@ -1,8 +1,21 @@
 import * as schema from "~/utils/db/schema";
 
-import { type InferSelectModel, and, eq, gt } from "drizzle-orm";
+import { and, eq, gt } from "drizzle-orm";
 
 import { dbClient } from "./client";
+
+type AuthContext = {
+	user: {
+		id: string;
+		email: string;
+		verified: boolean;
+	};
+	session: {
+		token: string;
+		active: boolean;
+		createdAt: Date;
+	};
+} | null;
 
 async function getUser(args: {
 	email?: string;
@@ -101,19 +114,37 @@ async function resetPassword(
 		.execute();
 }
 
-async function getSession(
-	sessionId: string
-): Promise<typeof schema.sessions.$inferSelect | null> {
+async function getSession(sessionId: string): Promise<AuthContext> {
 	const res = await dbClient
-		.select()
+		.select({
+			userId: schema.users.id,
+			email: schema.users.email,
+			verified: schema.users.verified,
+			sessionToken: schema.sessions.id,
+			active: schema.sessions.active,
+			createdAt: schema.sessions.createdAt,
+		})
 		.from(schema.sessions)
+		.innerJoin(schema.users, eq(schema.sessions.userId, schema.users.id))
 		.where(eq(schema.sessions.id, sessionId))
 		.execute();
 
-	if (res.length == 0) return null;
+	if (res.length === 0) return null;
 
-	const session = res[0];
-	return session;
+	const { userId, email, verified, sessionToken, active, createdAt } = res[0];
+
+	return {
+		user: {
+			id: userId,
+			email,
+			verified,
+		},
+		session: {
+			token: sessionToken,
+			active,
+			createdAt,
+		},
+	};
 }
 
 async function createSession(
@@ -131,11 +162,25 @@ async function createSession(
 	return insertedId;
 }
 
-async function closeSession(sessionId: string): Promise<void> {
-	await dbClient
+async function closeSession(sessionId: string): Promise<string | null> {
+	const res = await dbClient
 		.update(schema.sessions)
 		.set({ active: false })
-		.where(eq(schema.sessions.id, sessionId));
+		.where(eq(schema.sessions.id, sessionId))
+		.returning({ userId: schema.sessions.userId })
+		.execute();
+
+	if (res.length == 0) return null;
+
+	const userId = res[0].userId;
+	return userId;
+}
+
+async function refreshSession(sessionId: string): Promise<string | null> {
+	const userId = await closeSession(sessionId);
+	if (!userId) return null;
+
+	return await createSession({ userId });
 }
 
 async function logCommunication(
@@ -189,8 +234,11 @@ const auth = {
 	getSession,
 	createSession,
 	closeSession,
+	refreshSession,
 	logCommunication,
 	getCommunications,
 };
 
 export default auth;
+
+export { type AuthContext };
