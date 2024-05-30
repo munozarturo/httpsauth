@@ -8,7 +8,7 @@ export default defineNuxtConfig({
 			resetCodeExpiryTimeMs: 60 * 5 * 1000, // 5 minutes (ms)
 			verificationCommunicationRateLimitMs: 60 * 1000, // 1 communication per minute (ms)
 			sessionExpiryTimeMs: 7 * 24 * 60 * 60 * 1000, // 7 days
-			sessionRefreshThresholdMs: 2 * 24 * 60 * 60 * 1000, // 2 days
+			sessionRefreshThresholdMs: 5 * 24 * 60 * 60 * 1000, // 5 days (refresh session after 5 days)
 		},
 	},
 });

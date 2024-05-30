@@ -33,17 +33,32 @@ export default defineEventHandler(async (event) => {
 	const currentTime = Date.now();
 	if (
 		currentTime >
+		new Date(session.createdAt).getTime() + config.auth.sessionExpiryTimeMs
+	) {
+		DB.auth.closeSession(sessionToken);
+		deleteCookie(event, "session-token");
+		return;
+	}
+
+	if (
+		currentTime >
 		new Date(session.createdAt).getTime() +
 			config.auth.sessionRefreshThresholdMs
 	) {
+		console.log("Needs refresh");
+
 		const refreshedSessionToken = await DB.auth.refreshSession(
 			sessionToken
 		);
+
+		console.log("refreshed token", refreshedSessionToken);
 
 		if (!refreshedSessionToken) return;
 
 		var context = await DB.auth.getSession(refreshedSessionToken);
 		if (!context) return;
+
+		console.log("new session", context);
 
 		var { user, session } = context;
 
@@ -57,9 +72,6 @@ export default defineEventHandler(async (event) => {
 
 	event.context.auth = {
 		user,
-		session: {
-			...session,
-			token: sessionToken,
-		},
+		session,
 	};
 });
