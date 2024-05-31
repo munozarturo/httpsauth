@@ -18,6 +18,7 @@ export default defineEventHandler(async (event) => {
 
 	try {
 		const { challengeId, token, password } = bodyParser.parse(body);
+		const passwordHash = await bcrypt.hash(password, 10);
 
 		const challenge = await DB.auth.getChallenge(challengeId);
 		if (!challenge)
@@ -61,8 +62,6 @@ export default defineEventHandler(async (event) => {
 				statusCode: 400,
 				statusMessage: "Failed to defeat challenge.",
 			});
-
-		const passwordHash = await bcrypt.hash(password, 10);
 
 		await DB.auth.resetPassword(userId, passwordHash);
 

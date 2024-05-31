@@ -26,6 +26,9 @@ export default defineEventHandler(async (event) => {
 	try {
 		const { email } = bodyParser.parse(body);
 
+		const token = generateToken(64);
+		const tokenHash = await bcrypt.hash(token, 10);
+
 		const recentCommunications = await DB.auth.getCommunications({
 			to: email,
 			type: "password-reset-email",
@@ -43,9 +46,6 @@ export default defineEventHandler(async (event) => {
 				statusCode: 200,
 				statusMessage: "Success.",
 			});
-
-		const token = generateToken(64);
-		const tokenHash = await bcrypt.hash(token, 10);
 
 		const challengeId = await DB.auth.createChallenge({
 			type: "password-reset",

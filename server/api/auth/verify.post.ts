@@ -22,6 +22,10 @@ export default defineEventHandler(async (event) => {
 
 	try {
 		const { email } = bodyParser.parse(body);
+		const token = Math.round(Math.random() * 1000000)
+			.toString()
+			.padStart(6, "0");
+		const tokenHash = await bcrypt.hash(token, 10);
 
 		const recentCommunications = await DB.auth.getCommunications({
 			to: email,
@@ -30,6 +34,7 @@ export default defineEventHandler(async (event) => {
 				Date.now() - config.auth.verificationCommunicationRateLimitMs
 			),
 		});
+
 		if (recentCommunications.length > 0)
 			return createError({
 				statusCode: 429,
@@ -48,11 +53,6 @@ export default defineEventHandler(async (event) => {
 				statusCode: 409,
 				statusMessage: "Email already verified.",
 			});
-
-		const token = Math.round(Math.random() * 1000000)
-			.toString()
-			.padStart(6, "0");
-		const tokenHash = await bcrypt.hash(token, 10);
 
 		const challengeId = await DB.auth.createChallenge({
 			type: "verification",

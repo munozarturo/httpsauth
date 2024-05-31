@@ -16,6 +16,7 @@ export default defineEventHandler(async (event) => {
 
 	try {
 		const { email, password } = bodyParser.parse(body);
+		const passwordHash = await bcrypt.hash(password, 10);
 
 		const emailInUse = await DB.auth.getUser({ email });
 		if (emailInUse)
@@ -23,8 +24,6 @@ export default defineEventHandler(async (event) => {
 				statusCode: 400,
 				statusMessage: "Email already in use.",
 			});
-
-		const passwordHash = await bcrypt.hash(password, 10);
 
 		await DB.auth.createUser({ email, passwordHash });
 
