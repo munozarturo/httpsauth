@@ -51,7 +51,7 @@ export default defineEventHandler(async (event) => {
 		if (user.verified)
 			return createError({
 				statusCode: 409,
-				statusMessage: "Email already verified.",
+				statusMessage: "Account already verified.",
 			});
 
 		const challengeId = await DB.auth.createChallenge({
@@ -100,7 +100,7 @@ export default defineEventHandler(async (event) => {
 
 		return createError({
 			statusCode: 500,
-			statusMessage: "Unknown Error.",
+			statusMessage: "An error occurred. Please try again later.",
 		});
 	}
 });

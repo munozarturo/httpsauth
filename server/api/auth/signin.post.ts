@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
 		if (!user.verified)
 			return createError({
 				statusCode: 403,
-				statusMessage: "Email not verified.",
+				statusMessage: "Account not verified.",
 			});
 
 		const oldSessionToken = getCookie(event, "session-token") || null;
@@ -43,7 +43,7 @@ export default defineEventHandler(async (event) => {
 		if (!sessionToken)
 			return createError({
 				statusCode: 500,
-				statusMessage: "Failed to create session.",
+				statusMessage: "Authentication failed.",
 			});
 
 		setCookie(event, "session-token", sessionToken, {
@@ -69,7 +69,7 @@ export default defineEventHandler(async (event) => {
 
 		return createError({
 			statusCode: 500,
-			statusMessage: "Unknown Error.",
+			statusMessage: "An error occurred. Please try again later.",
 		});
 	}
 });

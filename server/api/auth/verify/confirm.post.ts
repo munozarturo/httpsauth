@@ -51,7 +51,7 @@ export default defineEventHandler(async (event) => {
 		if (!(await bcrypt.compare(token, challenge.tokenHash)))
 			return createError({
 				statusCode: 400,
-				statusMessage: "Incorrect verification code.",
+				statusMessage: "Invalid verification code.",
 			});
 
 		const userId = await DB.auth.attemptChallenge(challengeId);
@@ -80,7 +80,7 @@ export default defineEventHandler(async (event) => {
 
 		return createError({
 			statusCode: 500,
-			statusMessage: "Unknown Error.",
+			statusMessage: "An error occurred. Please try again later.",
 		});
 	}
 });

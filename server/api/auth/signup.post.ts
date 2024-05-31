@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
 		if (emailInUse)
 			return createError({
 				statusCode: 400,
-				statusMessage: "Email already in use.",
+				statusMessage: "Email unavailable.",
 			});
 
 		await DB.auth.createUser({ email, passwordHash });
@@ -43,7 +43,7 @@ export default defineEventHandler(async (event) => {
 
 		return createError({
 			statusCode: 500,
-			statusMessage: "Unknown Error.",
+			statusMessage: "An error occurred. Please try again later.",
 		});
 	}
 });
