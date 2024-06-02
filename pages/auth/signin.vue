@@ -36,7 +36,7 @@
 				</button>
 				<div class="text-center mt-4">
 					<a
-						href="/auth/reset"
+						:href="resetUrl"
 						class="text-sm text-gray-600 hover:text-gray-800"
 						>Forgot Password?</a
 					>
@@ -84,11 +84,15 @@ const redirect = ref("");
 redirect.value = route.query.redirect as string;
 
 const signUpUrl = computed(() => {
-	const baseUrl = "/auth/signup";
-	if (redirect.value) {
-		return `${baseUrl}?redirect=${encodeURIComponent(redirect.value)}`;
-	}
-	return baseUrl;
+	if (redirect.value)
+		return `/auth/signup?redirect=${encodeURIComponent(redirect.value)}`;
+	return "/auth/signup";
+});
+
+const resetUrl = computed(() => {
+	if (redirect.value)
+		return `/auth/reset?redirect=${encodeURIComponent(redirect.value)}`;
+	return "/auth/reset";
 });
 
 const forwardUrl = computed(() => {

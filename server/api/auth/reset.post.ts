@@ -11,6 +11,7 @@ import { zodEmail } from "~/utils/validation/common";
 
 const bodyParser = z.object({
 	email: zodEmail,
+	redirect: z.string().optional(),
 });
 
 export default defineEventHandler(async (event) => {
@@ -24,7 +25,7 @@ export default defineEventHandler(async (event) => {
 	const body = await readBody(event);
 
 	try {
-		const { email } = bodyParser.parse(body);
+		const { email, redirect } = bodyParser.parse(body);
 
 		const token = generateToken(64);
 		const tokenHash = await bcrypt.hash(token, 10);
@@ -58,12 +59,17 @@ export default defineEventHandler(async (event) => {
 			to: email,
 		});
 
-		const resetURL = `${NUXT_URL}/auth/reset?challenge=${challengeId}&token=${token}`;
+		const resetURL = () => {
+			if (redirect)
+				return `${NUXT_URL}/auth/reset?challenge=${challengeId}&token=${token}&redirect=${redirect}`;
+			else
+				return `${NUXT_URL}/auth/reset?challenge=${challengeId}&token=${token}`;
+		};
 		const emailBody: { html: string; text: string } = await useCompiler(
 			"reset-password-email.vue",
 			{
 				props: {
-					resetURL,
+					resetURL: resetURL(),
 					communicationId,
 				},
 			}

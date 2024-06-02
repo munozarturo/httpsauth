@@ -102,11 +102,19 @@ const errorMessage = ref("");
 const challenge = ref("");
 const token = ref("");
 
+const redirect = ref("");
+redirect.value = route.query.redirect as string;
+
+const forwardUrl = computed(() => {
+	if (redirect.value) return `/auth/signin?redirect=${redirect.value}`;
+	return "/auth/signin";
+});
+
 const submitEmail = async () => {
 	try {
 		await $fetch("/api/auth/reset", {
 			method: "POST",
-			body: { email: form.value.email },
+			body: { email: form.value.email, redirect: redirect.value },
 		});
 
 		emailSent.value = true;
@@ -143,7 +151,8 @@ const submitReset = async () => {
 
 		toasterStore.addMessage("Password reset", "success");
 		errorMessage.value = "";
-		router.push("/auth/signin");
+
+		router.push(forwardUrl.value);
 	} catch (e: any) {
 		if (!e.data)
 			errorMessage.value = "An unknown error occurred. Please try again.";
