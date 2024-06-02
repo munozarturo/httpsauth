@@ -3,7 +3,9 @@
 		<div
 			class="container mx-auto px-4 h-full flex items-center justify-between"
 		>
-			<div class="text-2xl font-bold text-black">nuxt-cookie-auth</div>
+			<a href="/" class="text-2xl font-bold text-black"
+				>nuxt-cookie-auth</a
+			>
 			<ClientOnly>
 				<SessionState />
 			</ClientOnly>
