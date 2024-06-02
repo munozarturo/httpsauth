@@ -5,7 +5,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
 	onNuxtReady(() => {
 		if (!authStore.context) {
-			router.push(`/auth/signin?callback=${from.fullPath}`);
+			router.push(`/auth/signin?redirect=${from.fullPath}`);
 		}
 	});
 });

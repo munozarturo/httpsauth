@@ -87,12 +87,12 @@ const form = ref<{
 });
 const errorMessage = ref<string>("");
 
-const callback = ref("");
-callback.value = route.query.callback as string;
+const redirect = ref("");
+redirect.value = route.query.redirect as string;
 
 const verifyUrl = computed(() => {
-	if (callback.value)
-		return `/auth/verify?email=${form.value.email}&callback=${callback.value}`;
+	if (redirect.value)
+		return `/auth/verify?email=${form.value.email}&redirect=${redirect.value}`;
 	return `/auth/verify?email=${form.value.email}`;
 });
 

@@ -68,11 +68,11 @@ const timerInterval = ref<NodeJS.Timeout | null>(null);
 const retryTimer = ref(0);
 const retryTimerInterval = ref<NodeJS.Timeout | null>(null);
 
-const callback = ref("");
-callback.value = route.query.callback as string;
+const redirect = ref("");
+redirect.value = route.query.redirect as string;
 
 const forwardUrl = computed(() => {
-	if (callback.value) return `/auth/signin?callback=${callback.value}`;
+	if (redirect.value) return `/auth/signin?redirect=${redirect.value}`;
 	return "/auth/signin";
 });
 

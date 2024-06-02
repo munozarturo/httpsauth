@@ -80,25 +80,25 @@ const form = ref<{
 	password: "",
 });
 
-const callback = ref("");
-callback.value = route.query.callback as string;
+const redirect = ref("");
+redirect.value = route.query.redirect as string;
 
 const signUpUrl = computed(() => {
 	const baseUrl = "/auth/signup";
-	if (callback.value) {
-		return `${baseUrl}?callback=${encodeURIComponent(callback.value)}`;
+	if (redirect.value) {
+		return `${baseUrl}?redirect=${encodeURIComponent(redirect.value)}`;
 	}
 	return baseUrl;
 });
 
 const forwardUrl = computed(() => {
-	if (callback.value) return callback.value;
+	if (redirect.value) return redirect.value;
 	return "/";
 });
 
 const verifyUrl = computed(() => {
-	if (callback.value)
-		return `/auth/verify?email=${form.value.email}&callback=${callback.value}`;
+	if (redirect.value)
+		return `/auth/verify?email=${form.value.email}&redirect=${redirect.value}`;
 	return `/auth/verify?email=${form.value.email}`;
 });
 
