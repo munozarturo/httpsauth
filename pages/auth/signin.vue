@@ -49,7 +49,7 @@
 			</div>
 			<div class="mt-6 text-center">
 				<a
-					href="/auth/signup"
+					:href="signUpUrl"
 					class="text-black font-bold hover:underline"
 					>Sign Up</a
 				>
@@ -70,6 +70,7 @@ import { useToasterStore } from "~/stores/toaster";
 
 const toasterStore = useToasterStore();
 
+const route = useRoute();
 const router = useRouter();
 const form = ref<{
 	email: string;
@@ -77,6 +78,28 @@ const form = ref<{
 }>({
 	email: "",
 	password: "",
+});
+
+const callback = ref("");
+callback.value = route.query.callback as string;
+
+const signUpUrl = computed(() => {
+	const baseUrl = "/auth/signup";
+	if (callback.value) {
+		return `${baseUrl}?callback=${encodeURIComponent(callback.value)}`;
+	}
+	return baseUrl;
+});
+
+const forwardUrl = computed(() => {
+	if (callback.value) return callback.value;
+	return "/";
+});
+
+const verifyUrl = computed(() => {
+	if (callback.value)
+		return `/auth/verify?email=${form.value.email}&callback=${callback.value}`;
+	return `/auth/verify?email=${form.value.email}`;
 });
 
 const errorMessage = ref<string>("");
@@ -90,15 +113,14 @@ const submitForm = async () => {
 
 		toasterStore.addMessage("Signed In", "success");
 
-		router.push("/");
+		router.push(forwardUrl.value);
 	} catch (e: any) {
 		if (!e.data)
 			errorMessage.value = "An unknown error occurred. Please try again.";
 
 		const error = e as unknown as APIError;
 
-		if (error.statusCode == 403)
-			router.push(`/auth/verify?email=${form.value.email}`);
+		if (error.statusCode == 403) router.push(verifyUrl.value);
 
 		errorMessage.value = error.statusMessage;
 	}

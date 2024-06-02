@@ -68,6 +68,14 @@ const timerInterval = ref<NodeJS.Timeout | null>(null);
 const retryTimer = ref(0);
 const retryTimerInterval = ref<NodeJS.Timeout | null>(null);
 
+const callback = ref("");
+callback.value = route.query.callback as string;
+
+const forwardUrl = computed(() => {
+	if (callback.value) return `/auth/signin?callback=${callback.value}`;
+	return "/auth/signin";
+});
+
 onMounted(async () => {
 	email.value = route.query.email as string;
 	if (email.value) {
@@ -85,12 +93,15 @@ const sendVerificationCode = async () => {
 		});
 
 		challenge.value = res.challengeId;
-		router.replace({ query: { challenge: challenge.value } });
+		router.replace({
+			query: { challenge: challenge.value },
+		});
 
 		toasterStore.addMessage(
 			"We sent a verification code to your email address",
 			"info"
 		);
+
 		startTimer();
 	} catch (e: any) {
 		if (!e.data)
@@ -102,7 +113,7 @@ const sendVerificationCode = async () => {
 		} else if (error.statusCode === 409) {
 			toasterStore.addMessage("Email already verified", "success");
 
-			router.push("/auth/signin");
+			router.push(forwardUrl.value);
 		} else {
 			errorMessage.value = error.statusMessage;
 		}
@@ -148,7 +159,7 @@ const submitVerificationCode = async (code: string) => {
 
 		toasterStore.addMessage("Account verified", "success");
 
-		router.push("/auth/signin");
+		router.push(forwardUrl.value);
 	} catch (e: any) {
 		if (!e.data)
 			errorMessage.value = "An unknown error occurred. Please try again.";

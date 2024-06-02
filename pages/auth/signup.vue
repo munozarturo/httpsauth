@@ -74,6 +74,7 @@ import { useToasterStore } from "~/stores/toaster";
 
 const toasterStore = useToasterStore();
 
+const route = useRoute();
 const router = useRouter();
 const form = ref<{
 	email: string;
@@ -85,6 +86,15 @@ const form = ref<{
 	confirmPassword: "",
 });
 const errorMessage = ref<string>("");
+
+const callback = ref("");
+callback.value = route.query.callback as string;
+
+const verifyUrl = computed(() => {
+	if (callback.value)
+		return `/auth/verify?email=${form.value.email}&callback=${callback.value}`;
+	return `/auth/verify?email=${form.value.email}`;
+});
 
 const submitForm = async () => {
 	if (form.value.password !== form.value.confirmPassword) {
@@ -103,7 +113,7 @@ const submitForm = async () => {
 
 		toasterStore.addMessage("Account registered", "success");
 
-		router.push(`/auth/verify?email=${form.value.email}`);
+		router.push(verifyUrl.value);
 	} catch (e: any) {
 		if (!e.data)
 			errorMessage.value = "An unknown error occurred. Please try again.";
