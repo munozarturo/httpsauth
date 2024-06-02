@@ -1,17 +1,13 @@
 <template>
 	<div class="relative">
-		<input
+		<Field
+			:name="name"
 			:type="showPassword ? 'text' : 'password'"
 			:id="id"
-			:value="modelValue"
-			@input="
-				$emit(
-					'update:modelValue',
-					($event.target as HTMLInputElement).value
-				)
-			"
+			:value="value"
+			@input="handleInput"
 			class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-			required
+			:rules="rules"
 		/>
 		<span
 			class="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
@@ -53,23 +49,36 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { Field } from "vee-validate";
 
 const props = defineProps({
 	id: {
 		type: String,
 		required: true,
 	},
-	modelValue: {
+	name: {
 		type: String,
 		required: true,
 	},
+	value: {
+		type: String,
+		default: "",
+	},
+	rules: {
+		type: String,
+		default: "",
+	},
 });
 
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(["update:value"]);
 
 const showPassword = ref(false);
 
 const togglePasswordVisibility = () => {
 	showPassword.value = !showPassword.value;
+};
+
+const handleInput = (event: Event) => {
+	emit("update:value", (event.target as HTMLInputElement).value);
 };
 </script>

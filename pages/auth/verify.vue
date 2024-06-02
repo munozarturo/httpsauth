@@ -21,7 +21,24 @@
 				<p class="text-center text-gray-700 mb-4">
 					Enter the verification code sent to your email.
 				</p>
-				<VerificationCodeInput @submit="submitVerificationCode" />
+				<Form
+					@submit="submitForm"
+					:validation-schema="validationSchema"
+				>
+					<Field name="code" v-slot="{ field }">
+						<VerificationCodeInput v-bind="field" />
+					</Field>
+					<ErrorMessage
+						name="code"
+						class="mt-2 text-center text-red-600"
+					/>
+					<button
+						type="submit"
+						class="mt-4 w-full bg-black text-white font-bold py-2 px-4 rounded-md hover:bg-gray-800"
+					>
+						Verify
+					</button>
+				</Form>
 				<p v-if="errorMessage" class="mt-4 text-center">
 					{{ errorMessage }}
 				</p>
@@ -55,26 +72,39 @@ import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import type { APIError } from "~/utils/errors/api";
 import { useToasterStore } from "~/stores/toaster";
+import { Form, Field, ErrorMessage } from "vee-validate";
+import * as zod from "zod";
+import { toTypedSchema } from "@vee-validate/zod";
+import { zodToken } from "~/utils/validation/common";
 
 const toasterStore = useToasterStore();
-
 const route = useRoute();
 const router = useRouter();
-const email = ref("");
-const challenge = ref("");
-const errorMessage = ref("");
-const timer = ref(0);
+
+const email = ref<string>("");
+const challenge = ref<string>("");
+const errorMessage = ref<string>("");
+
+const timer = ref<number>(0);
 const timerInterval = ref<NodeJS.Timeout | null>(null);
-const retryTimer = ref(0);
+
+const retryTimer = ref<number>(0);
 const retryTimerInterval = ref<NodeJS.Timeout | null>(null);
 
-const redirect = ref("");
+const redirect = ref<string>("");
 redirect.value = route.query.redirect as string;
 
 const forwardUrl = computed(() => {
 	if (redirect.value) return `/auth/signin?redirect=${redirect.value}`;
 	return "/auth/signin";
 });
+
+const zodSchema = zod.object({
+	code: zodToken,
+});
+
+const validationSchema = toTypedSchema(zodSchema);
+type FormValues = zod.infer<typeof zodSchema>;
 
 onMounted(async () => {
 	email.value = route.query.email as string;
@@ -147,13 +177,15 @@ const resendVerificationCode = async () => {
 	await sendVerificationCode();
 };
 
-const submitVerificationCode = async (code: string) => {
+const submitForm = async (input: Record<string, unknown>) => {
+	const form = input as FormValues;
+
 	try {
 		await $fetch("/api/auth/verify/confirm", {
 			method: "POST",
 			body: {
 				challengeId: challenge.value,
-				token: code,
+				token: form.code,
 			},
 		});
 

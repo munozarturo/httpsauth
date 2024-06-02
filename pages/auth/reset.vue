@@ -3,19 +3,26 @@
 		<div class="bg-white p-8 rounded-lg shadow-md">
 			<h2 class="text-2xl font-bold mb-6 text-center">Reset Password</h2>
 			<div v-if="!emailSent && !challenge">
-				<form @submit.prevent="submitEmail" class="space-y-2">
+				<Form
+					@submit="submitEmail"
+					:validation-schema="emailValidationSchema"
+					class="space-y-2"
+				>
 					<div>
 						<label
 							for="email"
 							class="block text-gray-700 font-bold mb-2"
 							>Email</label
 						>
-						<input
+						<Field
 							type="email"
 							id="email"
-							v-model="form.email"
-							required
+							name="email"
 							class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+						/>
+						<ErrorMessage
+							name="email"
+							class="mt-2 px-2 py-2 rounded-md"
 						/>
 					</div>
 					<button
@@ -24,7 +31,7 @@
 					>
 						Submit
 					</button>
-				</form>
+				</Form>
 				<p v-if="errorMessage" class="mt-4 text-center">
 					{{ errorMessage }}
 				</p>
@@ -37,14 +44,27 @@
 				</p>
 			</div>
 			<div v-else-if="challenge && token">
-				<form @submit.prevent="submitReset" class="space-y-2">
+				<Form
+					@submit="submitReset"
+					:validation-schema="resetValidationSchema"
+					class="space-y-2"
+				>
 					<div>
 						<label
 							for="password"
 							class="block text-gray-700 font-bold mb-2"
 							>New Password</label
 						>
-						<PasswordInput id="password" v-model="form.password" />
+						<PasswordInput
+							id="password"
+							name="password"
+							:value="password"
+							@update:value="password = $event"
+						/>
+						<ErrorMessage
+							name="password"
+							class="mt-2 px-2 py-2 rounded-md"
+						/>
 					</div>
 					<div>
 						<label
@@ -54,7 +74,13 @@
 						>
 						<PasswordInput
 							id="confirmPassword"
-							v-model="form.confirmPassword"
+							name="confirmPassword"
+							:value="confirmPassword"
+							@update:value="confirmPassword = $event"
+						/>
+						<ErrorMessage
+							name="confirmPassword"
+							class="mt-2 px-2 py-2 rounded-md"
 						/>
 					</div>
 					<button
@@ -63,7 +89,7 @@
 					>
 						Reset Password
 					</button>
-				</form>
+				</Form>
 				<p v-if="errorMessage" class="mt-4 text-center">
 					{{ errorMessage }}
 				</p>
@@ -77,32 +103,28 @@ definePageMeta({
 	layout: "auth",
 });
 
-import { ref } from "vue";
+import { Form, Field, ErrorMessage, useField } from "vee-validate";
+import { toTypedSchema } from "@vee-validate/zod";
+import * as zod from "zod";
 import { useRoute, useRouter } from "vue-router";
 import type { APIError } from "~/utils/errors/api";
 import { useToasterStore } from "~/stores/toaster";
+import { zodEmail, zodPassword } from "~/utils/validation/common";
 
 const toasterStore = useToasterStore();
-
-interface FormData {
-	email: string;
-	password: string;
-	confirmPassword: string;
-}
-
 const route = useRoute();
 const router = useRouter();
-const form = ref<FormData>({
-	email: "",
-	password: "",
-	confirmPassword: "",
-});
-const emailSent = ref(false);
-const errorMessage = ref("");
-const challenge = ref("");
-const token = ref("");
 
-const redirect = ref("");
+const emailSent = ref<boolean>(false);
+const errorMessage = ref(<string>"");
+
+const challenge = ref<string>("");
+challenge.value = route.query.challenge as string;
+
+const token = ref<string>("");
+token.value = route.query.token as string;
+
+const redirect = ref<string>("");
 redirect.value = route.query.redirect as string;
 
 const forwardUrl = computed(() => {
@@ -110,11 +132,20 @@ const forwardUrl = computed(() => {
 	return "/auth/signin";
 });
 
-const submitEmail = async () => {
+const emailZodSchema = zod.object({
+	email: zodEmail,
+});
+
+const emailValidationSchema = toTypedSchema(emailZodSchema);
+type EmailFormValues = zod.infer<typeof emailZodSchema>;
+
+const submitEmail = async (input: Record<string, unknown>) => {
+	const form = input as EmailFormValues;
+
 	try {
 		await $fetch("/api/auth/reset", {
 			method: "POST",
-			body: { email: form.value.email, redirect: redirect.value },
+			body: { email: form.email, redirect: redirect.value },
 		});
 
 		emailSent.value = true;
@@ -133,11 +164,24 @@ const submitEmail = async () => {
 	}
 };
 
-const submitReset = async () => {
-	if (form.value.password !== form.value.confirmPassword) {
-		errorMessage.value = "Passwords do not match.";
-		return;
-	}
+const resetZodSchema = zod
+	.object({
+		password: zodPassword,
+		confirmPassword: zodPassword,
+	})
+	.refine((data) => data.password === data.confirmPassword, {
+		message: "Passwords do not match",
+		path: ["confirmPassword"],
+	});
+
+const resetValidationSchema = toTypedSchema(resetZodSchema);
+type ResetFormValues = zod.infer<typeof resetZodSchema>;
+
+const { value: password } = useField<string>("password");
+const { value: confirmPassword } = useField<string>("confirmPassword");
+
+const submitReset = async (input: Record<string, unknown>) => {
+	const form = input as ResetFormValues;
 
 	try {
 		await $fetch("/api/auth/reset/confirm", {
@@ -145,7 +189,7 @@ const submitReset = async () => {
 			body: {
 				challengeId: challenge.value,
 				token: token.value,
-				password: form.value.password,
+				password: form.password,
 			},
 		});
 
@@ -161,8 +205,4 @@ const submitReset = async () => {
 		errorMessage.value = error.statusMessage;
 	}
 };
-
-// Check if challenge and token exist in the URL query params
-challenge.value = route.query.challenge as string;
-token.value = route.query.token as string;
 </script>
