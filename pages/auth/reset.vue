@@ -49,40 +49,17 @@
 					:validation-schema="resetValidationSchema"
 					class="space-y-2"
 				>
-					<div>
-						<label
-							for="password"
-							class="block text-gray-700 font-bold mb-2"
-							>New Password</label
-						>
-						<PasswordInput
-							id="password"
-							name="password"
-							:value="password"
-							@update:value="password = $event"
-						/>
-						<ErrorMessage
-							name="password"
-							class="mt-2 px-2 py-2 rounded-md"
-						/>
-					</div>
-					<div>
-						<label
-							for="confirmPassword"
-							class="block text-gray-700 font-bold mb-2"
-							>Confirm Password</label
-						>
-						<PasswordInput
-							id="confirmPassword"
-							name="confirmPassword"
-							:value="confirmPassword"
-							@update:value="confirmPassword = $event"
-						/>
-						<ErrorMessage
-							name="confirmPassword"
-							class="mt-2 px-2 py-2 rounded-md"
-						/>
-					</div>
+					<NewPasswordInput
+						id="password"
+						name="password"
+						label="New Password"
+						:value="password"
+						@update:value="password = $event"
+					/>
+					<ErrorMessage
+						name="password"
+						class="mt-2 px-2 py-2 rounded-md"
+					/>
 					<button
 						type="submit"
 						class="w-full bg-black text-white font-bold py-2 px-4 rounded-md hover:bg-gray-800"
@@ -164,21 +141,14 @@ const submitEmail = async (input: Record<string, unknown>) => {
 	}
 };
 
-const resetZodSchema = zod
-	.object({
-		password: zodPassword,
-		confirmPassword: zodPassword,
-	})
-	.refine((data) => data.password === data.confirmPassword, {
-		message: "Passwords do not match",
-		path: ["confirmPassword"],
-	});
+const resetZodSchema = zod.object({
+	password: zodPassword,
+});
 
 const resetValidationSchema = toTypedSchema(resetZodSchema);
 type ResetFormValues = zod.infer<typeof resetZodSchema>;
 
 const { value: password } = useField<string>("password");
-const { value: confirmPassword } = useField<string>("confirmPassword");
 
 const submitReset = async (input: Record<string, unknown>) => {
 	const form = input as ResetFormValues;

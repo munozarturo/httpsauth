@@ -25,36 +25,15 @@
 					/>
 				</div>
 				<div>
-					<label
-						for="password"
-						class="block text-gray-700 font-bold mb-2"
-						>Password</label
-					>
-					<PasswordInput
+					<NewPasswordInput
 						id="password"
 						name="password"
+						label="Password"
 						:value="password"
 						@update:value="password = $event"
 					/>
 					<ErrorMessage
 						name="password"
-						class="mt-2 px-2 py-2 rounded-md"
-					/>
-				</div>
-				<div>
-					<label
-						for="confirmPassword"
-						class="block text-gray-700 font-bold mb-2"
-						>Confirm Password</label
-					>
-					<PasswordInput
-						id="confirmPassword"
-						name="confirmPassword"
-						:value="confirmPassword"
-						@update:value="confirmPassword = $event"
-					/>
-					<ErrorMessage
-						name="confirmPassword"
 						class="mt-2 px-2 py-2 rounded-md"
 					/>
 				</div>
@@ -106,22 +85,15 @@ const errorMessage = ref<string>("");
 const redirect = ref<string>("");
 redirect.value = route.query.redirect as string;
 
-const zodSchema = zod
-	.object({
-		email: zodEmail,
-		password: zodPassword,
-		confirmPassword: zodPassword,
-	})
-	.refine((data) => data.password === data.confirmPassword, {
-		message: "Passwords do not match",
-		path: ["confirmPassword"],
-	});
+const zodSchema = zod.object({
+	email: zodEmail,
+	password: zodPassword,
+});
 
 const validationSchema = toTypedSchema(zodSchema);
 type FormValues = zod.infer<typeof zodSchema>;
 
 const { value: password } = useField<string>("password");
-const { value: confirmPassword } = useField<string>("confirmPassword");
 
 const submitForm = async (input: Record<string, unknown>) => {
 	const form = input as FormValues;
