@@ -56,10 +56,10 @@
 						:value="password"
 						@update:value="password = $event"
 					/>
-					<ErrorMessage
+					<!-- <ErrorMessage
 						name="password"
 						class="mt-2 px-2 py-2 rounded-md"
-					/>
+					/> -->
 					<button
 						type="submit"
 						class="w-full bg-black text-white font-bold py-2 px-4 rounded-md hover:bg-gray-800"
