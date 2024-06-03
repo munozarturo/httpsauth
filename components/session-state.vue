@@ -1,7 +1,7 @@
 <template>
 	<div v-if="authStore.context" class="flex items-center space-x-4">
 		<div>
-			<a href="/account/settings" class="flex items-center space-x-2">
+			<a href="/account" class="flex items-center space-x-2">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					class="h-6 w-6 text-gray-600"
@@ -42,6 +42,7 @@
 import { useAuthStore } from "~/stores/auth";
 import { useToasterStore } from "~/stores/toaster";
 
+const router = useRouter();
 const authStore = useAuthStore();
 const toasterStore = useToasterStore();
 
@@ -54,6 +55,8 @@ const signOut = async () => {
 		authStore.setAuthContext(null);
 
 		toasterStore.addMessage("Signed Out", "success");
+
+		router.push("/");
 	} catch (error: any) {
 		console.error(error);
 		toasterStore.addMessage(error.statusMessage, "error");
