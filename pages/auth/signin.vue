@@ -2,7 +2,7 @@
 	<main class="w-screen h-screen flex justify-center items-center">
 		<div class="w-1/2 h-2/3 flex flex-row shadow-lg rounded-lg bg-white">
 			<div
-				class="w-6/12 h-full flex flex-col items-center justify-center rounded-lg overflow-hidden"
+				class="w-1/2 h-full flex flex-col items-center justify-center rounded-lg overflow-hidden"
 			>
 				<img
 					src="~/assets/images/padlock.jpeg"
@@ -11,12 +11,20 @@
 				/>
 			</div>
 			<div
-				class="w-6/12 h-full flex flex-col items-center justify-around space-y-12 py-12 px-16"
+				class="w-1/2 h-full flex flex-col items-center justify-start overflow-auto"
 			>
-				<h1 href="/" class="text-3xl font-bold text-black">
-					nuxt-cookie-auth
-				</h1>
-				<SignInForm />
+				<div
+					class="w-full h-3/12 flex flex-col items-center justify-center py-12"
+				>
+					<h1 href="/" class="text-3xl font-bold text-black">
+						nuxt-cookie-auth
+					</h1>
+				</div>
+				<div
+					class="w-full h-full flex flex-col items-center justify-start px-12"
+				>
+					<SignInForm class="w-full h-full" />
+				</div>
 			</div>
 		</div>
 	</main>

@@ -1,5 +1,5 @@
 <template>
-	<div class="w-full h-full">
+	<div>
 		<Form
 			@submit="submitForm"
 			:validation-schema="validationSchema"
