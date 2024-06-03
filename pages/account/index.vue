@@ -40,11 +40,11 @@
 </template>
 
 <script lang="ts" setup>
-import { useAuthStore } from "~/stores/auth";
-
 definePageMeta({
 	middleware: "protected",
 });
+
+import { useAuthStore } from "~/stores/auth";
 
 const auth = useAuthStore();
 

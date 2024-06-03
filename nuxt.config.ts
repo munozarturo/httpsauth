@@ -1,6 +1,20 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
 	devtools: { enabled: true },
+	components: [
+		{
+			path: "~/components",
+			pathPrefix: false,
+		},
+		{
+			path: "~/components/auth",
+			pathPrefix: true,
+		},
+		{
+			path: "~/components/auth/forms",
+			pathPrefix: true,
+		},
+	],
 	modules: ["@nuxtjs/tailwindcss", "@pinia/nuxt", "@vue-email/nuxt"],
 	runtimeConfig: {
 		auth: {

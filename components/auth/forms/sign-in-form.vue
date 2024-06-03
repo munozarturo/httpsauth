@@ -63,10 +63,6 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-	layout: "auth",
-});
-
 import { Form, Field, ErrorMessage, useField } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import * as zod from "zod";
