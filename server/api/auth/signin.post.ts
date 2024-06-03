@@ -8,7 +8,7 @@ import { statusMessageFromZodError } from "~/utils/errors/api";
 
 const bodyParser = z.object({
 	email: zodEmail,
-	password: zodPassword,
+	password: z.string(),
 });
 
 export default defineEventHandler(async (event) => {

@@ -1,4 +1,4 @@
-import { type AuthContext } from "~/server/middleware/auth";
+import { type AuthContext } from "~/utils/db/auth-actions";
 import { defineStore } from "pinia";
 
 export const useAuthStore = defineStore("auth", {

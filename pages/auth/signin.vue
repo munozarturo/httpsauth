@@ -98,7 +98,7 @@ redirect.value = route.query.redirect as string;
 
 const zodSchema = zod.object({
 	email: zodEmail,
-	password: zodPassword,
+	password: zod.string(),
 });
 const validationSchema = toTypedSchema(zodSchema);
 type FormValues = zod.infer<typeof zodSchema>;
