@@ -2,8 +2,8 @@
 	<div>
 		<Form
 			v-if="!showPasswordSection"
-			@submit="submitEmailForm"
-			:validation-schema="emailValidationSchema"
+			@submit="submitUserForm"
+			:validation-schema="userValidationSchema"
 			class="space-y-2"
 		>
 			<div class="flex flex-col space-y-2">
@@ -102,9 +102,9 @@ const showPasswordSection = ref(false);
 const redirect = ref<string>("");
 redirect.value = route.query.redirect as string;
 
-const emailZodSchema = zod.object({ email: zodEmail });
-const emailValidationSchema = toTypedSchema(emailZodSchema);
-type EmailFormValues = zod.infer<typeof emailZodSchema>;
+const userZodSchema = zod.object({ email: zodEmail });
+const userValidationSchema = toTypedSchema(userZodSchema);
+type UserFormValues = zod.infer<typeof userZodSchema>;
 
 const email = ref<string>("");
 
@@ -116,8 +116,8 @@ type PasswordFormValues = zod.infer<typeof passwordZodSchema>;
 
 const { value: password } = useField<string>("password");
 
-const submitEmailForm = async (input: Record<string, unknown>) => {
-	const form = input as EmailFormValues;
+const submitUserForm = async (input: Record<string, unknown>) => {
+	const form = input as UserFormValues;
 	email.value = form.email;
 
 	try {
