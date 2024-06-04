@@ -104,7 +104,7 @@ const submitForm = async (input: Record<string, unknown>) => {
 	});
 
 	try {
-		await $fetch("/api/auth/signin", {
+		await useFetch("/api/auth/signin", {
 			method: "POST",
 			body: form,
 		});

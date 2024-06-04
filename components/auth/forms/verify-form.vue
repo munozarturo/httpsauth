@@ -163,7 +163,7 @@ const submitForm = async (input: Record<string, unknown>) => {
 	const form = input as FormValues;
 
 	try {
-		await $fetch("/api/auth/verify/confirm", {
+		await useFetch("/api/auth/verify/confirm", {
 			method: "POST",
 			body: {
 				challengeId: challenge.value,

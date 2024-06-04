@@ -1,4 +1,4 @@
-import type AuthContext from "~/server/middleware/auth";
+import type { AuthContext } from "~/utils/db/auth-actions";
 import { useAuthStore } from "~/stores/auth";
 
 export default defineNuxtRouteMiddleware(async () => {
@@ -6,11 +6,9 @@ export default defineNuxtRouteMiddleware(async () => {
 
 	if (!authStore.context) {
 		try {
-			const context = await $fetch<typeof AuthContext>(
-				"/api/auth/session"
-			);
+			const res = await $fetch<AuthContext>("/api/auth/session");
 
-			authStore.setAuthContext(context);
+			authStore.setAuthContext(res);
 		} catch (error) {
 			console.error("Failed to fetch auth context.", error);
 		}

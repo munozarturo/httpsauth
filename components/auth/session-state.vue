@@ -48,7 +48,7 @@ const toasterStore = useToasterStore();
 
 const signOut = async () => {
 	try {
-		await $fetch("/api/auth/signout", {
+		await useFetch("/api/auth/signout", {
 			method: "POST",
 		});
 

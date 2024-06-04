@@ -121,7 +121,7 @@ const submitUserForm = async (input: Record<string, unknown>) => {
 	email.value = form.email;
 
 	try {
-		await $fetch("/api/auth/signup", {
+		await useFetch("/api/auth/signup", {
 			method: "POST",
 			body: {
 				email: email.value,
@@ -151,7 +151,7 @@ const submitPasswordForm = async (input: Record<string, unknown>) => {
 	});
 
 	try {
-		await $fetch("/api/auth/signup", {
+		await useFetch("/api/auth/signup", {
 			method: "POST",
 			body: {
 				email: email.value,
