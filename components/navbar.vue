@@ -1,11 +1,9 @@
 <template>
 	<nav class="bg-white shadow-md h-16">
 		<div
-			class="container mx-auto px-4 h-full flex items-center justify-between"
+			class="container mx-auto px-4 h-full flex flex-row items-center justify-between"
 		>
-			<a href="/" class="text-2xl font-bold text-black"
-				>nuxt-cookie-auth</a
-			>
+			<Logo type="long" class="h-3/5" />
 			<ClientOnly>
 				<SessionState />
 			</ClientOnly>

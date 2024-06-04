@@ -14,15 +14,19 @@
 				class="w-1/2 h-full flex flex-col items-center justify-start overflow-auto"
 			>
 				<div
-					class="w-full h-3/12 flex flex-col items-center justify-center py-12"
+					class="w-full h-3/12 flex flex-col items-center justify-center p-5"
 				>
-					<h1 href="/" class="text-3xl font-bold text-black">
-						nuxt-cookie-auth
-					</h1>
+					<Logo type="long" class="h-full" />
 				</div>
 				<div
-					class="w-full h-full flex flex-col items-center justify-start px-12"
+					class="w-full h-full flex flex-col items-center justify-start space-y-2 px-12"
 				>
+					<h1
+						href="/"
+						class="w-full text-left text-2xl font-bold text-black"
+					>
+						Sign In
+					</h1>
 					<SignInForm class="w-full h-full" />
 				</div>
 			</div>

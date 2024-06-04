@@ -14,7 +14,12 @@
 				class="w-1/2 h-full flex flex-col items-center justify-start overflow-auto"
 			>
 				<div
-					class="w-full h-full flex flex-col space-y-6 items-center justify-start p-12"
+					class="w-full h-3/12 flex flex-col items-center justify-center p-5"
+				>
+					<Logo type="long" class="h-full" />
+				</div>
+				<div
+					class="w-full h-full flex flex-col items-center justify-start space-y-2 px-12"
 				>
 					<h1
 						href="/"

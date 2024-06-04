@@ -21,8 +21,20 @@
 				type="submit"
 				class="w-full bg-black text-white font-bold py-2 px-4 rounded-md hover:bg-gray-800"
 			>
-				Submit
+				Reset Password
 			</button>
+			<div class="mt-6 flex items-center">
+				<div class="border-t border-gray-300 flex-grow mr-3"></div>
+				<div class="text-gray-600">or</div>
+				<div class="border-t border-gray-300 flex-grow ml-3"></div>
+			</div>
+			<div class="mt-6 text-center">
+				<a
+					href="/auth/signin"
+					class="text-black font-bold hover:underline"
+					>Sign In</a
+				>
+			</div>
 		</Form>
 		<p v-if="errorMessage" class="mt-4 text-center">
 			{{ errorMessage }}

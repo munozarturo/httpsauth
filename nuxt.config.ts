@@ -15,7 +15,12 @@ export default defineNuxtConfig({
 			pathPrefix: true,
 		},
 	],
-	modules: ["@nuxtjs/tailwindcss", "@pinia/nuxt", "@vue-email/nuxt"],
+	modules: [
+		"@nuxtjs/tailwindcss",
+		"@pinia/nuxt",
+		"@vue-email/nuxt",
+		"nuxt-svgo",
+	],
 	runtimeConfig: {
 		auth: {
 			verificationCodeExpiryTimeMs: 60 * 5 * 1000, // 5 minutes (ms)
