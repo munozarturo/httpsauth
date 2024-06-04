@@ -8,7 +8,7 @@ import { statusMessageFromZodError } from "~/utils/errors/api";
 
 const bodyParser = z.object({
 	email: zodEmail,
-	password: zodPassword,
+	password: zodPassword.optional(),
 });
 
 export default defineEventHandler(async (event) => {
@@ -16,7 +16,6 @@ export default defineEventHandler(async (event) => {
 
 	try {
 		const { email, password } = bodyParser.parse(body);
-		const passwordHash = await bcrypt.hash(password, 10);
 
 		const emailInUse = await DB.auth.getUser({ email });
 		if (emailInUse)
@@ -25,7 +24,10 @@ export default defineEventHandler(async (event) => {
 				statusMessage: "Email unavailable.",
 			});
 
-		await DB.auth.createUser({ email, passwordHash });
+		if (password) {
+			const passwordHash = await bcrypt.hash(password, 10);
+			await DB.auth.createUser({ email, passwordHash });
+		}
 
 		return {
 			statusCode: 200,
