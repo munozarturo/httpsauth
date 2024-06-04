@@ -27,9 +27,9 @@
 						href="/"
 						class="w-full text-left text-2xl font-bold text-black"
 					>
-						Reset Password
+						Verify Account
 					</h1>
-					<ResetPasswordRequestForm />
+					<VerifyForm class="w-full h-full" />
 				</div>
 			</div>
 		</div>
