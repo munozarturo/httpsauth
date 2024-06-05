@@ -24,7 +24,7 @@
 				<VerificationTokenInput v-bind="field" @complete="submitForm" />
 			</Field>
 			<ErrorMessage name="token" class="mt-2 text-center text-black" />
-			<CButton type="submit" intent="regular" :is-loading="isLoading">
+			<CButton type="submit" look="regular" :is-loading="isLoading">
 				Verify
 			</CButton>
 		</Form>
@@ -38,7 +38,7 @@
 			<CButton
 				v-else
 				type="button"
-				intent="anchor"
+				look="anchor"
 				@click="resendVerificationToken"
 			>
 				Resend token?

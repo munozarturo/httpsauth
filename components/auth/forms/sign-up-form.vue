@@ -28,7 +28,7 @@
 						{{ errorMessage }}
 					</div>
 				</div>
-				<CButton type="submit" intent="regular" :is-loading="isLoading">
+				<CButton type="submit" look="regular" :is-loading="isLoading">
 					Next
 				</CButton>
 				<div class="mt-6 flex items-center">
@@ -69,7 +69,7 @@
 				>
 					Back
 				</button>
-				<CButton type="submit" intent="regular" :is-loading="isLoading">
+				<CButton type="submit" look="regular" :is-loading="isLoading">
 					Sign Up
 				</CButton>
 			</div>
