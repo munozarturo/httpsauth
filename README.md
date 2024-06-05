@@ -34,9 +34,9 @@ The build command is different since there are some issues with the `vue-email` 
 
 ```json
 "scripts": {
-    ...
+    ...,
     "build": "nuxt build && cp -r ./node_modules/esbuild-linux-64 ./.vercel/output/functions/__nitro.func/node_modules/esbuild-linux-64",
-    ...    
+    ...,
 },
 ```
 
