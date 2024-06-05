@@ -23,7 +23,7 @@
 			<Field name="token" v-slot="{ field }">
 				<VerificationTokenInput v-bind="field" @complete="submitForm" />
 			</Field>
-			<ErrorMessage name="token" class="mt-2 text-center text-red-600" />
+			<ErrorMessage name="token" class="mt-2 text-center text-black" />
 			<CButton type="submit" intent="regular" :is-loading="isLoading">
 				Verify
 			</CButton>
