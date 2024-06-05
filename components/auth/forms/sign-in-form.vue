@@ -35,7 +35,7 @@
 			<div v-if="errorMessage" class="mt-2 px-2 py-2 rounded-md">
 				{{ errorMessage }}
 			</div>
-			<CButton type="submit" intent="regular" :is-loading="isLoading"
+			<CButton type="submit" look="regular" :is-loading="isLoading"
 				>Sign In
 			</CButton>
 			<div class="text-center mt-4">
@@ -47,11 +47,7 @@
 				</a>
 			</div>
 		</Form>
-		<div class="mt-6 flex items-center">
-			<div class="border-t border-gray-300 flex-grow mr-3"></div>
-			<div class="text-gray-600">or</div>
-			<div class="border-t border-gray-300 flex-grow ml-3"></div>
-		</div>
+		<Spacer>or</Spacer>
 		<div class="mt-6 text-center">
 			<a :href="signUpUrl" class="text-black font-bold hover:underline"
 				>Sign Up</a

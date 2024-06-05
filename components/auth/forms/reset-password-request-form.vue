@@ -17,7 +17,7 @@
 				/>
 				<ErrorMessage name="email" class="mt-2 px-2 py-2 rounded-md" />
 			</div>
-			<CButton type="submit" intent="regular" :is-loading="isLoading"
+			<CButton type="submit" look="regular" :is-loading="isLoading"
 				>Reset Password
 			</CButton>
 			<div class="mt-6 flex items-center">
@@ -60,7 +60,7 @@
 						name="password"
 						class="mt-2 px-2 py-2 rounded-md"
 					/> -->
-			<CButton type="submit" intent="regular" :is-loading="isLoading"
+			<CButton type="submit" look="regular" :is-loading="isLoading"
 				>Reset Password
 			</CButton>
 		</Form>
