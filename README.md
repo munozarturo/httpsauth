@@ -16,7 +16,7 @@ From-scratch implementation of authentication flow over HTTPS using stateful bac
     NUXT_URL="" # deployment URL, eg. https://httpsauth.munozarturo.com
     DOMAIN="" # domain (used for emails), eg. httpsauth.munozarturo.com or communications.munozarturo.com
 
-    AWS_REGION="" # AWS region
+    AWS_REGION="" # AWS region, eg. us-east-2
     AWS_KEY="" # AWS key
     AWS_SECRET_ACCESS_KEY="" # AWS secret access key
     ```
