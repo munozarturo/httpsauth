@@ -5,9 +5,9 @@ function getSESClient(): SESClient {
 	if (!AWS_REGION)
 		throw new Error("`AWS_REGION` environment variable is undefined.");
 
-	const AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
-	if (!AWS_ACCESS_KEY)
-		throw new Error("`AWS_ACCESS_KEY` environment variable is undefined.");
+	const AWS_KEY = process.env.AWS_KEY;
+	if (!AWS_KEY)
+		throw new Error("`AWS_KEY` environment variable is undefined.");
 
 	const AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
 	if (!AWS_SECRET_ACCESS_KEY)
@@ -18,7 +18,7 @@ function getSESClient(): SESClient {
 	const client = new SESClient({
 		region: AWS_REGION,
 		credentials: {
-			accessKeyId: AWS_ACCESS_KEY,
+			accessKeyId: AWS_KEY,
 			secretAccessKey: AWS_SECRET_ACCESS_KEY,
 		},
 	});
