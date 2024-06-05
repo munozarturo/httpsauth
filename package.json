@@ -4,7 +4,7 @@
 	"type": "module",
 	"scripts": {
 		"start": "nuxt start",
-		"build": "nuxt build",
+		"build": "nuxt build && cp -r ./node_modules/esbuild-linux-64 ./.vercel/output/functions/__nitro.func/node_modules/esbuild-linux-64",
 		"dev": "nuxt dev",
 		"generate": "nuxt generate",
 		"db:generate": "drizzle-kit generate",
