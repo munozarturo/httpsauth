@@ -5,7 +5,7 @@
 				class="w-1/2 h-full flex flex-col items-center justify-center rounded-lg overflow-hidden"
 			>
 				<img
-					src="~/assets/images/padlock.jpeg"
+					src="/images/padlock.jpeg"
 					alt="Padlock"
 					class="w-full h-full object-cover"
 				/>
@@ -16,7 +16,7 @@
 				<div
 					class="w-full h-3/12 flex flex-col items-center justify-center p-5"
 				>
-					<Logo type="long" class="h-full" />
+					<Logo type="long" href="/" class="h-full" />
 				</div>
 				<div
 					class="w-full h-full flex flex-col items-center justify-start space-y-2 px-12"

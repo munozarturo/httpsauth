@@ -1,13 +1,18 @@
 <template>
 	<component :is="href ? 'a' : 'div'" :href="href" class="inline-block">
-		<component class="svg" :is="type === 'long' ? LogoLong : LogoWide" />
+		<img
+			class="w-auto h-4/5 object-contain"
+			:src="
+				type === 'long'
+					? '/brand/httpsauth_logo_long.svg'
+					: '/brand/httpsauth_logo_wide.svg'
+			"
+			alt="Logo"
+		/>
 	</component>
 </template>
 
 <script setup lang="ts">
-import LogoLong from "~/assets/brand/httpsauth_logo_long.svg";
-import LogoWide from "~/assets/brand/httpsauth_logo_wide.svg";
-
 defineProps({
 	type: {
 		type: String,
@@ -16,15 +21,7 @@ defineProps({
 	},
 	href: {
 		type: String,
-		default: null,
+		default: "/",
 	},
 });
 </script>
-
-<style>
-.svg {
-	width: 100%;
-	height: 100%;
-	overflow: visible;
-}
-</style>

@@ -15,17 +15,18 @@
 		<p class="text-left text-gray-700 mb-4">
 			Enter the verification token sent to your email.
 		</p>
-		<Form @submit="submitForm" :validation-schema="validationSchema">
+		<Form
+			@submit="submitForm"
+			:validation-schema="validationSchema"
+			class="space-y-2"
+		>
 			<Field name="token" v-slot="{ field }">
 				<VerificationTokenInput v-bind="field" @complete="submitForm" />
 			</Field>
 			<ErrorMessage name="token" class="mt-2 text-center text-red-600" />
-			<button
-				type="submit"
-				class="mt-4 w-full bg-black text-white font-bold py-2 px-4 rounded-md hover:bg-gray-800"
-			>
+			<CButton type="submit" intent="regular" :is-loading="isLoading">
 				Verify
-			</button>
+			</CButton>
 		</Form>
 		<p v-if="errorMessage" class="mt-4 text-center">
 			{{ errorMessage }}
@@ -34,13 +35,15 @@
 			<button v-if="timer > 0" class="text-sm text-gray-600" disabled>
 				Resend token in {{ timer }} seconds
 			</button>
-			<button
+			<CButton
 				v-else
-				class="text-sm text-gray-600 hover:text-gray-800"
+				type="button"
+				intent="anchor"
 				@click="resendVerificationToken"
+				:is-loading="isLoading"
 			>
 				Resend token?
-			</button>
+			</CButton>
 		</div>
 	</div>
 </template>
@@ -62,6 +65,8 @@ import { zodToken } from "~/utils/validation/common";
 const toasterStore = useToasterStore();
 const route = useRoute();
 const router = useRouter();
+
+const isLoading = ref<boolean>(false);
 
 const email = ref<string>("");
 const challenge = ref<string>("");
@@ -99,6 +104,8 @@ onMounted(async () => {
 
 const sendVerificationToken = async () => {
 	try {
+		isLoading.value = true;
+
 		const res = await $fetch<{ challengeId: string }>("/api/auth/verify", {
 			method: "POST",
 			body: { email: email.value },
@@ -129,6 +136,8 @@ const sendVerificationToken = async () => {
 		} else {
 			errorMessage.value = error.statusMessage;
 		}
+	} finally {
+		isLoading.value = false;
 	}
 };
 
@@ -163,7 +172,9 @@ const submitForm = async (input: Record<string, unknown>) => {
 	const form = input as FormValues;
 
 	try {
-		await useFetch("/api/auth/verify/confirm", {
+		isLoading.value = true;
+
+		await $fetch("/api/auth/verify/confirm", {
 			method: "POST",
 			body: {
 				challengeId: challenge.value,
@@ -180,6 +191,8 @@ const submitForm = async (input: Record<string, unknown>) => {
 
 		const error = e as unknown as APIError;
 		errorMessage.value = error.statusMessage;
+	} finally {
+		isLoading.value = false;
 	}
 };
 </script>

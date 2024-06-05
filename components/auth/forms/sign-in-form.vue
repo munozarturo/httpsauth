@@ -35,18 +35,16 @@
 			<div v-if="errorMessage" class="mt-2 px-2 py-2 rounded-md">
 				{{ errorMessage }}
 			</div>
-			<button
-				type="submit"
-				class="w-full bg-black text-white font-bold py-2 px-4 rounded-md hover:bg-gray-800"
-			>
-				Sign In
-			</button>
+			<CButton type="submit" intent="regular" :is-loading="isLoading"
+				>Sign In
+			</CButton>
 			<div class="text-center mt-4">
 				<a
 					:href="resetUrl"
 					class="text-sm text-gray-600 hover:text-gray-800"
-					>Forgot Password?</a
 				>
+					Forgot Password?
+				</a>
 			</div>
 		</Form>
 		<div class="mt-6 flex items-center">
@@ -74,6 +72,8 @@ import { zodEmail } from "~/utils/validation/common";
 const toasterStore = useToasterStore();
 const route = useRoute();
 const router = useRouter();
+
+const isLoading = ref<boolean>(false);
 
 const errorMessage = ref<string>("");
 
@@ -104,7 +104,9 @@ const submitForm = async (input: Record<string, unknown>) => {
 	});
 
 	try {
-		await useFetch("/api/auth/signin", {
+		isLoading.value = true;
+
+		await $fetch("/api/auth/signin", {
 			method: "POST",
 			body: form,
 		});
@@ -118,9 +120,13 @@ const submitForm = async (input: Record<string, unknown>) => {
 
 		const error = e as unknown as APIError;
 
+		console.log(error);
+
 		if (error.statusCode == 403) router.push(verifyUrl.value);
 
 		errorMessage.value = error.statusMessage;
+	} finally {
+		isLoading.value = false;
 	}
 };
 

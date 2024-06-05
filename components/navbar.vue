@@ -3,7 +3,7 @@
 		<div
 			class="container mx-auto px-4 h-full flex flex-row items-center justify-between"
 		>
-			<Logo type="long" class="h-3/5" />
+			<Logo type="long" href="/" class="h-3/5" />
 			<ClientOnly>
 				<SessionState />
 			</ClientOnly>

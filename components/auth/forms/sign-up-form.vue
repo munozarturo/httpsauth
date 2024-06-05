@@ -28,12 +28,9 @@
 						{{ errorMessage }}
 					</div>
 				</div>
-				<button
-					type="submit"
-					class="w-full bg-black text-white font-bold py-2 px-4 rounded-md hover:bg-gray-800"
-				>
+				<CButton type="submit" intent="regular" :is-loading="isLoading">
 					Next
-				</button>
+				</CButton>
 				<div class="mt-6 flex items-center">
 					<div class="border-t border-gray-300 flex-grow mr-3"></div>
 					<div class="text-gray-600">or</div>
@@ -72,12 +69,9 @@
 				>
 					Back
 				</button>
-				<button
-					type="submit"
-					class="w-1/2 bg-black text-white font-bold py-2 px-4 rounded-md hover:bg-gray-800"
-				>
+				<CButton type="submit" intent="regular" :is-loading="isLoading">
 					Sign Up
-				</button>
+				</CButton>
 			</div>
 		</Form>
 	</div>
@@ -95,6 +89,8 @@ import { zodEmail, zodPassword } from "~/utils/validation/common";
 const toasterStore = useToasterStore();
 const route = useRoute();
 const router = useRouter();
+
+const isLoading = ref<boolean>(false);
 
 const errorMessage = ref<string>("");
 const showPasswordSection = ref(false);
@@ -121,7 +117,9 @@ const submitUserForm = async (input: Record<string, unknown>) => {
 	email.value = form.email;
 
 	try {
-		await useFetch("/api/auth/signup", {
+		isLoading.value = true;
+
+		await $fetch("/api/auth/signup", {
 			method: "POST",
 			body: {
 				email: email.value,
@@ -138,6 +136,8 @@ const submitUserForm = async (input: Record<string, unknown>) => {
 
 		const error = e as unknown as APIError;
 		errorMessage.value = error.statusMessage;
+	} finally {
+		isLoading.value = false;
 	}
 };
 
@@ -151,7 +151,9 @@ const submitPasswordForm = async (input: Record<string, unknown>) => {
 	});
 
 	try {
-		await useFetch("/api/auth/signup", {
+		isLoading.value = true;
+
+		await $fetch("/api/auth/signup", {
 			method: "POST",
 			body: {
 				email: email.value,
@@ -168,6 +170,8 @@ const submitPasswordForm = async (input: Record<string, unknown>) => {
 
 		const error = e as unknown as APIError;
 		errorMessage.value = error.statusMessage;
+	} finally {
+		isLoading.value = false;
 	}
 };
 </script>

@@ -9,7 +9,7 @@ const router = useRouter();
 
 const signOut = async () => {
 	try {
-		await useFetch("/api/auth/signout", {
+		await $fetch("/api/auth/signout", {
 			method: "POST",
 		});
 

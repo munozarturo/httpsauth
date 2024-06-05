@@ -23,6 +23,9 @@
 			>
 				Reset Password
 			</button>
+			<CButton type="submit" intent="regular" :is-loading="isLoading"
+				>Reset Password
+			</CButton>
 			<div class="mt-6 flex items-center">
 				<div class="border-t border-gray-300 flex-grow mr-3"></div>
 				<div class="text-gray-600">or</div>
@@ -63,12 +66,9 @@
 						name="password"
 						class="mt-2 px-2 py-2 rounded-md"
 					/> -->
-			<button
-				type="submit"
-				class="w-full bg-black text-white font-bold py-2 px-4 rounded-md hover:bg-gray-800"
-			>
-				Reset Password
-			</button>
+			<CButton type="submit" intent="regular" :is-loading="isLoading"
+				>Reset Password
+			</CButton>
 		</Form>
 		<p v-if="errorMessage" class="mt-4 text-center">
 			{{ errorMessage }}
@@ -92,6 +92,8 @@ import { zodEmail, zodPassword } from "~/utils/validation/common";
 const toasterStore = useToasterStore();
 const route = useRoute();
 const router = useRouter();
+
+const isLoading = ref<boolean>(false);
 
 const emailSent = ref<boolean>(false);
 const errorMessage = ref(<string>"");
@@ -121,7 +123,9 @@ const submitEmail = async (input: Record<string, unknown>) => {
 	const form = input as EmailFormValues;
 
 	try {
-		await useFetch("/api/auth/reset", {
+		isLoading.value = true;
+
+		await $fetch("/api/auth/reset", {
 			method: "POST",
 			body: { email: form.email, redirect: redirect.value },
 		});
@@ -139,6 +143,8 @@ const submitEmail = async (input: Record<string, unknown>) => {
 		} else {
 			errorMessage.value = error.statusMessage;
 		}
+	} finally {
+		isLoading.value = false;
 	}
 };
 
@@ -155,7 +161,9 @@ const submitReset = async (input: Record<string, unknown>) => {
 	const form = input as ResetFormValues;
 
 	try {
-		await useFetch("/api/auth/reset/confirm", {
+		isLoading.value = true;
+
+		await $fetch("/api/auth/reset/confirm", {
 			method: "POST",
 			body: {
 				challengeId: challenge.value,
@@ -174,6 +182,8 @@ const submitReset = async (input: Record<string, unknown>) => {
 
 		const error = e as unknown as APIError;
 		errorMessage.value = error.statusMessage;
+	} finally {
+		isLoading.value = false;
 	}
 };
 </script>
