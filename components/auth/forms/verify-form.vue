@@ -48,10 +48,6 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-	layout: "auth",
-});
-
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import type { APIError } from "~/utils/errors/api";
