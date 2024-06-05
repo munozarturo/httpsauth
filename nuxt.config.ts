@@ -14,11 +14,6 @@ export default defineNuxtConfig({
 			path: "~/components/auth/forms",
 			pathPrefix: true,
 		},
-		{
-			path: "~/emails",
-			extensions: ["vue"],
-			pattern: "**/*.vue",
-		},
 	],
 	modules: ["@nuxtjs/tailwindcss", "@pinia/nuxt", "@vue-email/nuxt"],
 	runtimeConfig: {
