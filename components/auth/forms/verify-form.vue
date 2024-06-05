@@ -40,7 +40,6 @@
 				type="button"
 				intent="anchor"
 				@click="resendVerificationToken"
-				:is-loading="isLoading"
 			>
 				Resend token?
 			</CButton>

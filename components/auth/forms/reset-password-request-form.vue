@@ -17,12 +17,6 @@
 				/>
 				<ErrorMessage name="email" class="mt-2 px-2 py-2 rounded-md" />
 			</div>
-			<button
-				type="submit"
-				class="w-full bg-black text-white font-bold py-2 px-4 rounded-md hover:bg-gray-800"
-			>
-				Reset Password
-			</button>
 			<CButton type="submit" intent="regular" :is-loading="isLoading"
 				>Reset Password
 			</CButton>
