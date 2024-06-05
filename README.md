@@ -6,6 +6,27 @@ From-scratch implementation of authentication flow over HTTPS using stateful bac
 
 Live deployment [httpsauth.munozarturo.com](https://httpsauth.munozarturo.com/).
 
+## To Do
+
+* Authentication FLow
+  * [ ] Password Policy
+  * [ ] Account Lockout
+  * [ ] Security Headers
+  * [ ] Password History
+  * [ ] API Rate Limiter
+  * [ ] Fix SVGs
+  * [ ] Account Section
+    * [ ] Update Password
+    * [ ] Close All Sessions
+* QOL
+  * [ ] $fetch errors not caught in deployment.
+  * [ ] `token: Required` when submitting verification code with auto-paste.
+  * [ ] Make UI mobile friendly.
+  * [ ] Improve form formatting.
+* Documentation
+  * [ ] Improve `README.md`.
+  * [ ] Write guide on how to implement authentication from scracth.
+
 ## Setup
 
 1. Set environmet variables in `.env`.
