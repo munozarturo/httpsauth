@@ -137,6 +137,9 @@ const submitUserForm = async (input: Record<string, unknown>) => {
 			return;
 		}
 
+		if (Object.hasOwn(e.data, "statusMessage"))
+			console.log(e.data.statusMessage);
+
 		console.log("mid", e, typeof e);
 
 		const error = e as unknown as APIError;
