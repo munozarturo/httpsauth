@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 
 const props = defineProps({
 	value: {
@@ -36,18 +36,15 @@ onMounted(() => {
 	) as HTMLInputElement[];
 });
 
-watch(tokenInputs, (newValue) => {
-	const token = newValue.join("");
-	emit("input", token);
-
-	if (token.length === 6) {
-		emit("complete", { token });
-	}
-});
-
 const handleInput = (index: number) => {
-	if (tokenInputs.value[index].length === 1 && index < 5) {
-		inputRefs.value[index + 1]?.focus();
+	if (tokenInputs.value[index].length === 1) {
+		if (index < 5) {
+			inputRefs.value[index + 1]?.focus();
+		}
+
+		if (tokenInputs.value.join("").length === 6) {
+			emit("complete", { token: tokenInputs.value.join("") });
+		}
 	}
 };
 
@@ -66,6 +63,7 @@ const handlePaste = (event: ClipboardEvent) => {
 	if (pastedToken && /^\d{6}$/.test(pastedToken)) {
 		tokenInputs.value = pastedToken.split("");
 		inputRefs.value[5]?.focus();
+		emit("complete", { token: pastedToken });
 	}
 	event.preventDefault();
 };
