@@ -57,9 +57,12 @@ const signOut = async () => {
 		toasterStore.addMessage("Signed Out", "success");
 
 		router.push("/");
-	} catch (error: any) {
-		console.error(error);
-		toasterStore.addMessage(error.statusMessage, "error");
+	} catch (e: any) {
+		const errorMessage = Object.hasOwn(e.data, "statusMessage")
+			? e.data.statusMessage
+			: "An unknown error occurred. Please try again.";
+
+		toasterStore.addMessage(errorMessage, "error");
 	}
 };
 </script>

@@ -118,18 +118,16 @@ const sendVerificationToken = async () => {
 
 		startTimer();
 	} catch (e: any) {
-		if (!e.data)
-			errorMessage.value = "An unknown error occurred. Please try again.";
+		errorMessage.value = Object.hasOwn(e.data, "statusMessage")
+			? e.data.statusMessage
+			: "An unknown error occurred. Please try again.";
 
-		const error = e as unknown as APIError;
-		if (error.statusCode === 429) {
+		const statusCode: number | undefined = e.data.statusCode;
+		if (statusCode === 429) {
 			startRetryTimer();
-		} else if (error.statusCode === 409) {
+		} else if (statusCode === 409) {
 			toasterStore.addMessage("Email already verified", "success");
-
 			router.push(forwardUrl.value);
-		} else {
-			errorMessage.value = error.statusMessage;
 		}
 	} finally {
 		isLoading.value = false;
@@ -181,11 +179,9 @@ const submitForm = async (input: Record<string, unknown>) => {
 
 		router.push(forwardUrl.value);
 	} catch (e: any) {
-		if (!e.data)
-			errorMessage.value = "An unknown error occurred. Please try again.";
-
-		const error = e as unknown as APIError;
-		errorMessage.value = error.statusMessage;
+		errorMessage.value = Object.hasOwn(e.data, "statusMessage")
+			? e.data.statusMessage
+			: "An unknown error occurred. Please try again.";
 	} finally {
 		isLoading.value = false;
 	}

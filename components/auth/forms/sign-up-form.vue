@@ -131,11 +131,9 @@ const submitUserForm = async (input: Record<string, unknown>) => {
 
 		errorMessage.value = "";
 	} catch (e: any) {
-		if (Object.hasOwn(e.data, "statusMessage"))
-			errorMessage.value = e.data.statusMessage;
-		else {
-			errorMessage.value = "An unknown error occurred. Please try again.";
-		}
+		errorMessage.value = Object.hasOwn(e.data, "statusMessage")
+			? e.data.statusMessage
+			: "An unknown error occurred. Please try again.";
 	} finally {
 		isLoading.value = false;
 	}
@@ -165,11 +163,9 @@ const submitPasswordForm = async (input: Record<string, unknown>) => {
 
 		router.push(verifyUrl.value);
 	} catch (e: any) {
-		if (!e.data)
-			errorMessage.value = "An unknown error occurred. Please try again.";
-
-		const error = e as unknown as APIError;
-		errorMessage.value = error.statusMessage;
+		errorMessage.value = Object.hasOwn(e.data, "statusMessage")
+			? e.data.statusMessage
+			: "An unknown error occurred. Please try again.";
 	} finally {
 		isLoading.value = false;
 	}

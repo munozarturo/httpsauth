@@ -123,16 +123,14 @@ const submitEmail = async (input: Record<string, unknown>) => {
 		emailSent.value = true;
 		errorMessage.value = "";
 	} catch (e: any) {
-		if (!e.data)
-			errorMessage.value = "An unknown error occurred. Please try again.";
+		errorMessage.value = Object.hasOwn(e.data, "statusMessage")
+			? e.data.statusMessage
+			: "An unknown error occurred. Please try again.";
 
-		const error = e as unknown as APIError;
-		if (error.statusCode === 429) {
+		const statusCode: number | undefined = e.data.statusCode;
+		if (statusCode === 429)
 			errorMessage.value =
 				"Too many requests. Please wait and try again later.";
-		} else {
-			errorMessage.value = error.statusMessage;
-		}
 	} finally {
 		isLoading.value = false;
 	}
@@ -167,11 +165,9 @@ const submitReset = async (input: Record<string, unknown>) => {
 
 		router.push(forwardUrl.value);
 	} catch (e: any) {
-		if (!e.data)
-			errorMessage.value = "An unknown error occurred. Please try again.";
-
-		const error = e as unknown as APIError;
-		errorMessage.value = error.statusMessage;
+		errorMessage.value = Object.hasOwn(e.data, "statusMessage")
+			? e.data.statusMessage
+			: "An unknown error occurred. Please try again.";
 	} finally {
 		isLoading.value = false;
 	}
