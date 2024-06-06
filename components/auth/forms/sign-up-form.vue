@@ -131,6 +131,8 @@ const submitUserForm = async (input: Record<string, unknown>) => {
 
 		errorMessage.value = "";
 	} catch (e: any) {
+		console.log("Error thrown.");
+
 		if (!e.data)
 			errorMessage.value = "An unknown error occurred. Please try again.";
 
