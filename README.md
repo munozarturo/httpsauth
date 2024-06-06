@@ -24,6 +24,7 @@ Live deployment [httpsauth.munozarturo.com](https://httpsauth.munozarturo.com/).
   * [X] `token: Required` when submitting verification code with auto-paste.
   * [x] Make UI mobile friendly.
   * [ ] Improve form formatting.
+  * [ ] [SEO and Meta](https://nuxt.com/docs/getting-started/seo-meta)
 * Documentation
   * [ ] Improve `README.md`.
   * [ ] Write guide on how to implement authentication from scracth.
