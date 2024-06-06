@@ -22,7 +22,7 @@ Live deployment [httpsauth.munozarturo.com](https://httpsauth.munozarturo.com/).
 * QOL
   * [X] $fetch errors not caught in deployment.
   * [X] `token: Required` when submitting verification code with auto-paste.
-  * [ ] Make UI mobile friendly.
+  * [x] Make UI mobile friendly.
   * [ ] Improve form formatting.
 * Documentation
   * [ ] Improve `README.md`.

@@ -82,7 +82,6 @@ import { Form, Field, ErrorMessage, useField } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import * as zod from "zod";
 import { useRouter } from "vue-router";
-import type { APIError } from "~/utils/errors/api";
 import { useToasterStore } from "~/stores/toaster";
 import { zodEmail, zodPassword } from "~/utils/validation/common";
 
