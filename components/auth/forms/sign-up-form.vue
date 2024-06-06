@@ -131,13 +131,12 @@ const submitUserForm = async (input: Record<string, unknown>) => {
 
 		errorMessage.value = "";
 	} catch (e: any) {
-		console.log(e);
-
-		if (!e.data)
+		if (!Object.hasOwn(e, "data"))
 			errorMessage.value = "An unknown error occurred. Please try again.";
-
-		const error = e as unknown as APIError;
-		errorMessage.value = error.statusMessage;
+		else {
+			const error = e as unknown as APIError;
+			errorMessage.value = error.statusMessage;
+		}
 	} finally {
 		isLoading.value = false;
 	}
