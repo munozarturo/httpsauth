@@ -21,7 +21,10 @@
 			class="space-y-2"
 		>
 			<Field name="token" v-slot="{ field }">
-				<VerificationTokenInput v-bind="field" @complete="submitForm" />
+				<VerificationTokenInput
+					v-model="field.value"
+					@complete="submitForm"
+				/>
 			</Field>
 			<ErrorMessage name="token" class="mt-2 text-center text-black" />
 			<CButton type="submit" look="regular" :is-loading="isLoading">
@@ -50,7 +53,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import type { APIError } from "~/utils/errors/api";
 import { useToasterStore } from "~/stores/toaster";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import * as zod from "zod";

@@ -16,11 +16,12 @@ Live deployment [httpsauth.munozarturo.com](https://httpsauth.munozarturo.com/).
   * [ ] API Rate Limiter
   * [ ] Fix SVGs
   * [ ] Account Section
+    * [ ] Update Email
     * [ ] Update Password
     * [ ] Close All Sessions
 * QOL
-  * [ ] $fetch errors not caught in deployment.
-  * [ ] `token: Required` when submitting verification code with auto-paste.
+  * [X] $fetch errors not caught in deployment.
+  * [X] `token: Required` when submitting verification code with auto-paste.
   * [ ] Make UI mobile friendly.
   * [ ] Improve form formatting.
 * Documentation

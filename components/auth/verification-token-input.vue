@@ -41,7 +41,7 @@ watch(tokenInputs, (newValue) => {
 	emit("input", token);
 
 	if (token.length === 6) {
-		emit("complete", token);
+		emit("complete", { token });
 	}
 });
 
@@ -66,7 +66,6 @@ const handlePaste = (event: ClipboardEvent) => {
 	if (pastedToken && /^\d{6}$/.test(pastedToken)) {
 		tokenInputs.value = pastedToken.split("");
 		inputRefs.value[5]?.focus();
-		emit("complete", { token: pastedToken });
 	}
 	event.preventDefault();
 };
