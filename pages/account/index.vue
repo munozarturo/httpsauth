@@ -4,8 +4,7 @@
 	>
 		<Logo type="long" />
 		<div v-if="auth.context" class="space-y-8">
-			<h1 class="text-4xl font-bold">Welcome to Your Account</h1>
-			<div class="space-y-4">
+			<div class="space-y-4 font-normal text-xl">
 				<p class="pl-4">
 					Here's a quick overview of your account information:
 				</p>
