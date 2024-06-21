@@ -68,11 +68,9 @@
 				</ul>
 				<p class="pl-4">
 					Need to make changes? You can
-					<a class="underline" href="/auth/change-password"
+					<a class="underline" href="/auth/reset"
 						>change your password</a
-					>
-					or
-					<a class="underline" href="/auth/logout">log out</a>.
+					>.
 				</p>
 			</div>
 		</div>

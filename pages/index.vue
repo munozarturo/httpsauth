@@ -120,6 +120,7 @@
 						{{ stats.closedSessions == 1 ? "is" : "are" }} closed
 					</li>
 					<li class="leading-relaxed">
+						and
 						<span
 							class="inline-flex items-center px-2 py-1 rounded-lg text-sm font-bold bg-orange-100 text-orange-800"
 						>
