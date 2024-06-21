@@ -76,7 +76,7 @@
 				</p>
 			</div>
 		</div>
-		<div v-else class="text-2xl font-bold">Loading...</div>
+		<div v-else class="text-2xl">Loading...</div>
 	</div>
 </template>
 

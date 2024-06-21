@@ -104,7 +104,7 @@
 						}}.
 					</li>
 					<li class="leading-relaxed">
-						The platform has
+						There are
 						<span
 							class="inline-flex items-center px-2 py-1 rounded-lg text-sm font-bold bg-green-100 text-green-800"
 						>
