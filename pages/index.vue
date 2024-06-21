@@ -5,7 +5,7 @@
 		<Logo type="long" />
 		<div class="space-y-4">
 			<div class="space-y-2">
-				<p class="pl-4">Let me make this brief...</p>
+				<p class="pl-4">Let&apos;s make this brief...</p>
 				<ul class="pl-10 list-disc">
 					<li>
 						I am
@@ -104,7 +104,7 @@
 						}}.
 					</li>
 					<li class="leading-relaxed">
-						There are
+						There {{ stats.registeredUsers == 1 ? "is" : "are" }},
 						<span
 							class="inline-flex items-center px-2 py-1 rounded-lg text-sm font-bold bg-green-100 text-green-800"
 						>
