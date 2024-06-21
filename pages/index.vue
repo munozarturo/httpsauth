@@ -1,5 +1,7 @@
 <template>
-	<div class="w-4/5 h-full flex flex-col space-y-6 px-32 pt-32 text-xl">
+	<div
+		class="h-full flex flex-col space-y-6 px-8 lg:px-32 py-4 lg:pt-24 text-xl"
+	>
 		<Logo type="long" />
 		<div class="space-y-4">
 			<div class="space-y-2">
@@ -25,67 +27,19 @@
 				</p>
 			</div>
 			<div
-				:v-if="stats"
-				class="w-4/5 flex flex-row space-x-4 items-start justify-evenly px-12"
+				v-if="stats"
+				class="w-full md:w-4/5 grid grid-cols-1 md:grid-cols-5 gap-4 px-4 md:px-12"
 			>
 				<div
-					class="w-1/5 h-full flex flex-col items-center justify-center bg-black rounded-lg text-white p-4 space-y-2"
+					v-for="(stat, key) in stats"
+					:key="key"
+					class="flex flex-row md:flex-col items-center md:items-stretch justify-between md:justify-center bg-black rounded-lg text-white p-4 space-x-4 md:space-x-0 md:space-y-2 h-24 md:h-32"
 				>
-					<div>
-						<p class="text-3xl font-bold">
-							{{ stats.registeredUsers }}
-						</p>
+					<div class="flex items-center justify-center md:flex-grow">
+						<p class="text-3xl font-bold">{{ stat }}</p>
 					</div>
-					<div>
-						<p class="text-center">Registered<br />Users</p>
-					</div>
-				</div>
-				<div
-					class="w-1/5 h-full flex flex-col items-center justify-center bg-black rounded-lg text-white p-4 space-y-2"
-				>
-					<div>
-						<p class="text-3xl font-bold">
-							{{ stats.verifiedUsers }}
-						</p>
-					</div>
-					<div>
-						<p class="text-center">Verified<br />Users</p>
-					</div>
-				</div>
-				<div
-					class="w-1/5 h-full flex flex-col items-center justify-center bg-black rounded-lg text-white p-4 space-y-2"
-				>
-					<div>
-						<p class="text-3xl font-bold">
-							{{ stats.activeSessions }}
-						</p>
-					</div>
-					<div>
-						<p class="text-center">Active<br />Sessions</p>
-					</div>
-				</div>
-				<div
-					class="w-1/5 h-full flex flex-col items-center justify-center bg-black rounded-lg text-white p-4 space-y-2"
-				>
-					<div>
-						<p class="text-3xl font-bold">
-							{{ stats.closedSessions }}
-						</p>
-					</div>
-					<div>
-						<p class="text-center">Closed<br />Sessions</p>
-					</div>
-				</div>
-				<div
-					class="w-1/5 h-full flex flex-col items-center justify-center bg-black rounded-lg text-white p-4 space-y-2"
-				>
-					<div>
-						<p class="text-3xl font-bold">
-							{{ stats.passwordResets }}
-						</p>
-					</div>
-					<div>
-						<p class="text-center">Passwords<br />Reset</p>
+					<div class="flex items-center justify-center md:h-12">
+						<p class="text-center">{{ formatLabel(key) }}</p>
 					</div>
 				</div>
 			</div>
@@ -105,4 +59,15 @@ const stats = computed(() => {
 		passwordResets: number;
 	};
 });
+
+function formatLabel(key: string): string {
+	const labels: Record<string, string> = {
+		registeredUsers: "Registered\nUsers",
+		verifiedUsers: "Verified\nUsers",
+		activeSessions: "Active\nSessions",
+		closedSessions: "Closed\nSessions",
+		passwordResets: "Passwords\nReset",
+	};
+	return labels[key] || key;
+}
 </script>
