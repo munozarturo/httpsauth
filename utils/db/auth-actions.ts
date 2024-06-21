@@ -256,7 +256,12 @@ async function getStats(): Promise<{
 	const passwordResetsResult = await dbClient
 		.select({ count: count() })
 		.from(schema.challenges)
-		.where(eq(schema.challenges.type, "password-reset"));
+		.where(
+			and(
+				eq(schema.challenges.type, "password-reset"),
+				eq(schema.challenges.used, true)
+			)
+		);
 	const passwordResets = passwordResetsResult[0]?.count ?? null;
 
 	return {

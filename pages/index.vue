@@ -87,13 +87,13 @@
 				<ul class="list-disc pl-10">
 					<li class="leading-relaxed">
 						<span
-							class="inline-flex items-center px-2 py-1 rounded-lg text-sm font-bold bg-green-100 text-green-800"
+							class="inline-flex items-center px-2 py-1 rounded-lg text-sm font-bold bg-sky-100 text-sky-800"
 						>
 							{{ stats.registeredUsers }}
 						</span>
 						users have signed up and
 						<span
-							class="inline-flex items-center px-2 py-1 rounded-lg text-sm font-bold bg-purple-100 text-purple-800"
+							class="inline-flex items-center px-2 py-1 rounded-lg text-sm font-bold bg-cyan-100 text-cyan-800"
 						>
 							{{ stats.verifiedUsers }}
 						</span>
@@ -101,17 +101,23 @@
 					</li>
 					<li class="leading-relaxed">
 						<span
-							class="inline-flex items-center px-2 py-1 rounded-lg text-sm font-bold bg-blue-100 text-blue-800"
+							class="inline-flex items-center px-2 py-1 rounded-lg text-sm font-bold bg-indigo-100 text-indigo-800"
+						>
+							{{ stats.activeSessions + stats.closedSessions }}
+						</span>
+						sessions have been created,
+						<span
+							class="inline-flex items-center px-2 py-1 rounded-lg text-sm font-bold bg-green-100 text-green-800"
 						>
 							{{ stats.activeSessions }}
 						</span>
-						sessions have been opened and
+						{{ stats.activeSessions == 1 ? "is" : "are" }} open and
 						<span
 							class="inline-flex items-center px-2 py-1 rounded-lg text-sm font-bold bg-red-100 text-red-800"
 						>
 							{{ stats.closedSessions }}
 						</span>
-						sessions been closed
+						{{ stats.closedSessions == 1 ? "is" : "are" }} closed
 					</li>
 					<li class="leading-relaxed">
 						<span
