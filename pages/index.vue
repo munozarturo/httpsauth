@@ -78,56 +78,48 @@
 					</li>
 				</ul>
 				<p class="pl-4">
-					Try it out by
+					I encourage you to try it out by
 					<a class="underline" href="/auth/signup">signing up</a>.
 				</p>
 			</div>
 			<div v-if="stats" class="w-full">
-				<p class="pl-4">Currently,</p>
+				<p class="pl-4">So far...</p>
 				<ul class="list-disc pl-10">
 					<li class="leading-relaxed">
-						There {{ stats.activeSessions == 1 ? "is" : "are" }}
-						<span
-							class="inline-flex items-center px-2 py-1 rounded-lg text-sm font-bold bg-blue-100 text-blue-800"
-						>
-							{{ stats.activeSessions }}
-						</span>
-						active session{{ stats.activeSessions == 1 ? "" : "s" }}
-						and
-						<span
-							class="inline-flex items-center px-2 py-1 rounded-lg text-sm font-bold bg-red-100 text-red-800"
-						>
-							{{ stats.closedSessions }}
-						</span>
-						closed session{{
-							stats.closedSessions == 1 ? "" : "s"
-						}}.
-					</li>
-					<li class="leading-relaxed">
-						There {{ stats.registeredUsers == 1 ? "is" : "are" }},
 						<span
 							class="inline-flex items-center px-2 py-1 rounded-lg text-sm font-bold bg-green-100 text-green-800"
 						>
 							{{ stats.registeredUsers }}
 						</span>
-						registered user{{
-							stats.registeredUsers == 1 ? "" : "s"
-						}},
+						users have signed up and
 						<span
 							class="inline-flex items-center px-2 py-1 rounded-lg text-sm font-bold bg-purple-100 text-purple-800"
 						>
 							{{ stats.verifiedUsers }}
 						</span>
-						of which are verified.
+						accounts have been verified
 					</li>
 					<li class="leading-relaxed">
-						Users have reset their passwords
+						<span
+							class="inline-flex items-center px-2 py-1 rounded-lg text-sm font-bold bg-blue-100 text-blue-800"
+						>
+							{{ stats.activeSessions }}
+						</span>
+						sessions have been opened and
 						<span
 							class="inline-flex items-center px-2 py-1 rounded-lg text-sm font-bold bg-red-100 text-red-800"
 						>
+							{{ stats.closedSessions }}
+						</span>
+						sessions been closed
+					</li>
+					<li class="leading-relaxed">
+						<span
+							class="inline-flex items-center px-2 py-1 rounded-lg text-sm font-bold bg-orange-100 text-orange-800"
+						>
 							{{ stats.passwordResets }}
 						</span>
-						time{{ stats.passwordResets == 1 ? "" : "s" }} in total.
+						password resets have occurred
 					</li>
 				</ul>
 			</div>
