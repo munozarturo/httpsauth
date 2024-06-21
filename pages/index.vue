@@ -29,61 +29,63 @@
 				class="w-4/5 flex flex-row space-x-4 items-start justify-evenly px-12"
 			>
 				<div
-					class="w-1/5 h-full flex flex-col items-center justify-center bg-black rounded-lg text-white p-4"
+					class="w-1/5 h-full flex flex-col items-center justify-center bg-black rounded-lg text-white p-4 space-y-2"
 				>
 					<div>
-						<p>{{ stats.registeredUsers }}</p>
+						<p class="text-3xl font-bold">
+							{{ stats.registeredUsers }}
+						</p>
 					</div>
 					<div>
-						<p class="font-bold text-center">
-							Registered<br />Users
-						</p>
+						<p class="text-center">Registered<br />Users</p>
 					</div>
 				</div>
 				<div
-					class="w-1/5 h-full flex flex-col items-center justify-center bg-black rounded-lg text-white p-4"
+					class="w-1/5 h-full flex flex-col items-center justify-center bg-black rounded-lg text-white p-4 space-y-2"
 				>
 					<div>
-						<p>{{ stats.verifiedUsers }}</p>
+						<p class="text-3xl font-bold">
+							{{ stats.verifiedUsers }}
+						</p>
 					</div>
 					<div>
-						<p class="font-bold text-center">Verified<br />Users</p>
+						<p class="text-center">Verified<br />Users</p>
 					</div>
 				</div>
 				<div
-					class="w-1/5 h-full flex flex-col items-center justify-center bg-black rounded-lg text-white p-4"
+					class="w-1/5 h-full flex flex-col items-center justify-center bg-black rounded-lg text-white p-4 space-y-2"
 				>
 					<div>
-						<p>{{ stats.activeSessions }}</p>
+						<p class="text-3xl font-bold">
+							{{ stats.activeSessions }}
+						</p>
 					</div>
 					<div>
-						<p class="font-bold text-center">
-							Active<br />Sessions
-						</p>
+						<p class="text-center">Active<br />Sessions</p>
 					</div>
 				</div>
 				<div
-					class="w-1/5 h-full flex flex-col items-center justify-center bg-black rounded-lg text-white p-4"
+					class="w-1/5 h-full flex flex-col items-center justify-center bg-black rounded-lg text-white p-4 space-y-2"
 				>
 					<div>
-						<p>{{ stats.closedSessions }}</p>
+						<p class="text-3xl font-bold">
+							{{ stats.closedSessions }}
+						</p>
 					</div>
 					<div>
-						<p class="font-bold text-center">
-							Closed<br />Sessions
-						</p>
+						<p class="text-center">Closed<br />Sessions</p>
 					</div>
 				</div>
 				<div
-					class="w-1/5 h-full flex flex-col items-center justify-center bg-black rounded-lg text-white p-4"
+					class="w-1/5 h-full flex flex-col items-center justify-center bg-black rounded-lg text-white p-4 space-y-2"
 				>
 					<div>
-						<p>{{ stats.passwordResets }}</p>
+						<p class="text-3xl font-bold">
+							{{ stats.passwordResets }}
+						</p>
 					</div>
 					<div>
-						<p class="font-bold text-center">
-							Passwords<br />Reset
-						</p>
+						<p class="text-center">Passwords<br />Reset</p>
 					</div>
 				</div>
 			</div>
