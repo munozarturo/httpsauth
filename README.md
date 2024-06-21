@@ -8,6 +8,8 @@ Live deployment [httpsauth.munozarturo.com](https://httpsauth.munozarturo.com/).
 
 ## To Do
 
+* Development Tools
+  * [ ] Add event subscription and broadcaster
 * Authentication FLow
   * [ ] Password Policy
   * [ ] Account Lockout

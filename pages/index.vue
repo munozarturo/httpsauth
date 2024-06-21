@@ -19,6 +19,10 @@
 					<li>Built with Nuxt, PostgreSQL and Amazon SES.</li>
 					<li>Hosted on Vercel.</li>
 				</ul>
+				<p class="pl-4">
+					Try it out by
+					<a class="underline" href="/auth/signup">signing up</a>.
+				</p>
 			</div>
 			<div
 				:v-if="stats"
