@@ -51,6 +51,14 @@ Live deployment [httpsauth.munozarturo.com](https://httpsauth.munozarturo.com/).
    * This project is built to work with PostgreSQL.
 4. Run `npm run dev` for local development.
 
+### Setup Notes
+
+Remove the following:
+
+* `getStats` in `utils/db/auth-actions.ts`
+* `server/api/auth/stats.get.ts`
+* stats display in `pages/index.vue`
+
 ## Notes
 
 ### Build Command with ESBuild Copy

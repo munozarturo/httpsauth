@@ -1,6 +1,6 @@
 import * as schema from "~/utils/db/schema";
 
-import { and, eq, gt } from "drizzle-orm";
+import { and, count, eq, gt } from "drizzle-orm";
 
 import { dbClient } from "./client";
 
@@ -223,6 +223,51 @@ async function getCommunications(args: {
 	return res;
 }
 
+async function getStats(): Promise<{
+	registeredUsers: number | null;
+	verifiedUsers: number | null;
+	activeSessions: number | null;
+	closedSessions: number | null;
+	passwordResets: number | null;
+}> {
+	const registeredUsersResult = await dbClient
+		.select({ count: count() })
+		.from(schema.users);
+	const registeredUsers = registeredUsersResult[0]?.count ?? null;
+
+	const verifiedUsersResult = await dbClient
+		.select({ count: count() })
+		.from(schema.users)
+		.where(eq(schema.users.verified, true));
+	const verifiedUsers = verifiedUsersResult[0]?.count ?? null;
+
+	const activeSessionsResult = await dbClient
+		.select({ count: count() })
+		.from(schema.sessions)
+		.where(eq(schema.sessions.active, true));
+	const activeSessions = activeSessionsResult[0]?.count ?? null;
+
+	const closedSessionsResult = await dbClient
+		.select({ count: count() })
+		.from(schema.sessions)
+		.where(eq(schema.sessions.active, false));
+	const closedSessions = closedSessionsResult[0]?.count ?? null;
+
+	const passwordResetsResult = await dbClient
+		.select({ count: count() })
+		.from(schema.challenges)
+		.where(eq(schema.challenges.type, "password-reset"));
+	const passwordResets = passwordResetsResult[0]?.count ?? null;
+
+	return {
+		registeredUsers,
+		verifiedUsers,
+		activeSessions,
+		closedSessions,
+		passwordResets,
+	};
+}
+
 const auth = {
 	getUser,
 	createUser,
@@ -237,6 +282,7 @@ const auth = {
 	refreshSession,
 	logCommunication,
 	getCommunications,
+	getStats,
 };
 
 export default auth;
