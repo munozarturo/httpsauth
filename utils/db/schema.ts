@@ -1,20 +1,22 @@
 import {
 	boolean,
 	pgEnum,
-	pgTable,
+	pgSchema,
 	text,
 	timestamp,
 	uuid,
 } from "drizzle-orm/pg-core";
 
-export const users = pgTable("users", {
+export const authSchema = pgSchema("authentication");
+
+export const users = authSchema.table("users", {
 	id: uuid("id").primaryKey().defaultRandom(),
 	email: text("email").notNull().unique(),
 	passwordHash: text("password_hash").notNull(),
 	verified: boolean("verified").notNull().default(false),
 });
 
-export const sessions = pgTable("sessions", {
+export const sessions = authSchema.table("sessions", {
 	id: uuid("id").primaryKey().defaultRandom(),
 	active: boolean("active").notNull().default(true),
 	userId: uuid("user_id")
@@ -28,7 +30,7 @@ export const challengeType = pgEnum("challenge_type", [
 	"password-reset",
 ]);
 
-export const challenges = pgTable("challenges", {
+export const challenges = authSchema.table("challenges", {
 	id: uuid("id").primaryKey().defaultRandom(),
 	type: challengeType("challenge_type").notNull(),
 	userId: uuid("user_id")
@@ -44,7 +46,7 @@ export const communicationType = pgEnum("communication_type", [
 	"password-reset-email",
 ]);
 
-export const communications = pgTable("communications", {
+export const communications = authSchema.table("communications", {
 	id: uuid("id").primaryKey().defaultRandom(),
 	to: text("to").notNull(),
 	type: communicationType("communication_type").notNull(),
