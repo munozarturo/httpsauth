@@ -11,7 +11,7 @@ Live deployment [httpsauth.munozarturo.com](https://httpsauth.munozarturo.com/).
 * Development Tools
   * [ ] Add event subscription and broadcaster
 * Authentication FLow
-  * [ ] Sign In on verify
+  * [x] Sign In on verify
   * [ ] Password Policy
   * [ ] Account Lockout
   * [ ] Security Headers

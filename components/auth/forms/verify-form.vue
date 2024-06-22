@@ -78,10 +78,7 @@ const retryTimerInterval = ref<NodeJS.Timeout | null>(null);
 const redirect = ref<string>("");
 redirect.value = route.query.redirect as string;
 
-const forwardUrl = computed(() => {
-	if (redirect.value) return `/auth/signin?redirect=${redirect.value}`;
-	return "/auth/signin";
-});
+const forwardUrl = computed(() => redirect.value || "/");
 
 const zodSchema = zod.object({
 	token: zodToken,
@@ -110,7 +107,7 @@ const sendVerificationToken = async () => {
 
 		challenge.value = res.challengeId;
 		router.replace({
-			query: { challenge: challenge.value },
+			query: { challenge: challenge.value, redirect: redirect.value },
 		});
 
 		toasterStore.addMessage(

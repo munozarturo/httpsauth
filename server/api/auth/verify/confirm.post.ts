@@ -12,6 +12,10 @@ const bodyParser = z.object({
 });
 
 export default defineEventHandler(async (event) => {
+	const NODE_ENV = process.env.NODE_ENV;
+	if (!NODE_ENV)
+		throw new Error("`NODE_ENV` environment variable is undefined.");
+
 	const config = useRuntimeConfig();
 	const body = await readBody(event);
 
@@ -63,6 +67,20 @@ export default defineEventHandler(async (event) => {
 			});
 
 		await DB.auth.verifyUser(userId);
+
+		const sessionToken = await DB.auth.createSession({ userId });
+		if (!sessionToken)
+			return createError({
+				statusCode: 500,
+				statusMessage: "Authentication failed.",
+			});
+
+		setCookie(event, "session-token", sessionToken, {
+			httpOnly: true,
+			secure: NODE_ENV === "production",
+			sameSite: "strict",
+			maxAge: config.auth.sessionExpiryTimeMs / 1000,
+		});
 
 		return {
 			statusCode: 200,
