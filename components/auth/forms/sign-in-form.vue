@@ -25,7 +25,7 @@
 					id="password"
 					name="password"
 					:value="password"
-					@update:value="password = $publish"
+					@update:value="password = $event"
 				/>
 				<ErrorMessage
 					name="password"

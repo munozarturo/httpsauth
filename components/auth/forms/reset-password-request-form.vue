@@ -54,7 +54,7 @@
 				name="password"
 				label="New Password"
 				:value="password"
-				@update:value="password = $publish"
+				@update:value="password = $event"
 			/>
 			<!-- <ErrorMessage
 						name="password"

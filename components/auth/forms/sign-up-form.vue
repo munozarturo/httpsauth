@@ -56,7 +56,7 @@
 				name="password"
 				label="Password"
 				:value="password"
-				@update:value="password = $publish"
+				@update:value="password = $event"
 			/>
 			<div v-if="errorMessage" class="mt-2 px-2 py-2 rounded-md">
 				{{ errorMessage }}
