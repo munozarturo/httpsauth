@@ -26,7 +26,7 @@
 					</li>
 				</ul>
 				<p class="pl-4">
-					This is my implementation of authentication from scratch.
+					This is my take on authentication from scratch.
 				</p>
 				<ul class="pl-10 space-y-2">
 					<li>
