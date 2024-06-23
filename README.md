@@ -9,7 +9,7 @@ Live deployment [httpsauth.munozarturo.com](https://httpsauth.munozarturo.com/).
 ## To Do
 
 * Development Tools
-  * [ ] Add event subscription and broadcaster for auth events
+  * [x] Add event subscription and broadcaster for auth events
 * Authentication FLow
   * [ ] Security Headers
   * [ ] API Rate Limiter
