@@ -71,6 +71,8 @@ const { $publish } = useNuxtApp();
 $publish("auth:sign-out", null); // can change event payload type from null to something else
 ```
 
+from [here](https://dev.to/israelortuno/event-bus-pattern-in-nuxt-3-with-full-typescript-support-1okp).
+
 ### Build Command with ESBuild Copy
 
 The build command is different since there are some issues with the `vue-email` package and including the `esbuild-linux-64` directory in the output. Refer to [this](https://github.com/vue-email/vue-email/issues/58) GitHub issue.
