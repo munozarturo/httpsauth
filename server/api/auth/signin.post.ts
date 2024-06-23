@@ -1,10 +1,10 @@
 import * as bcrypt from "bcrypt";
 
 import { ZodError, z } from "zod";
-import { zodEmail, zodPassword } from "~/utils/validation/common";
 
 import DB from "~/utils/db/actions";
 import { statusMessageFromZodError } from "~/utils/errors/api";
+import { zodEmail } from "~/utils/validation/common";
 
 const bodyParser = z.object({
 	email: zodEmail,

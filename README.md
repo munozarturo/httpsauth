@@ -9,9 +9,8 @@ Live deployment [httpsauth.munozarturo.com](https://httpsauth.munozarturo.com/).
 ## To Do
 
 * Development Tools
-  * [ ] Add event subscription and broadcaster
+  * [ ] Add event subscription and broadcaster for auth events
 * Authentication FLow
-  * [x] Sign In on verify
   * [ ] Password Policy
   * [ ] Account Lockout
   * [ ] Security Headers
@@ -23,9 +22,6 @@ Live deployment [httpsauth.munozarturo.com](https://httpsauth.munozarturo.com/).
     * [ ] Update Password
     * [ ] Close All Sessions
 * QOL
-  * [X] $fetch errors not caught in deployment.
-  * [X] `token: Required` when submitting verification code with auto-paste.
-  * [x] Make UI mobile friendly.
   * [ ] Improve form formatting.
   * [ ] [SEO and Meta](https://nuxt.com/docs/getting-started/seo-meta)
 * Documentation

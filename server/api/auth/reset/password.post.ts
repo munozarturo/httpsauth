@@ -61,9 +61,9 @@ export default defineEventHandler(async (event) => {
 
 		const resetURL = () => {
 			if (redirect)
-				return `${NUXT_URL}/auth/reset?challenge=${challengeId}&token=${token}&redirect=${redirect}`;
+				return `${NUXT_URL}/auth/reset/password?challenge=${challengeId}&token=${token}&redirect=${redirect}`;
 			else
-				return `${NUXT_URL}/auth/reset?challenge=${challengeId}&token=${token}`;
+				return `${NUXT_URL}/auth/reset/password?challenge=${challengeId}&token=${token}`;
 		};
 		const emailBody: { html: string; text: string } = await useCompiler(
 			"reset-password-email.vue",
@@ -76,7 +76,7 @@ export default defineEventHandler(async (event) => {
 		);
 
 		await sendEmail({
-			source: `${DOMAIN} <verification@auth.${DOMAIN}>`,
+			source: `${DOMAIN} <accounts@${DOMAIN}>`,
 			destination: { to: email },
 			subject: "Reset Your Password",
 			body: emailBody,

@@ -1,5 +1,5 @@
 {
-  "id": "b1f7faef-f062-43dc-bd8f-fd8486e510c0",
+  "id": "d74a5942-3871-4c4f-a225-b3e2b4f9451d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "6",
   "dialect": "postgresql",
@@ -123,6 +123,13 @@
           "primaryKey": false,
           "notNull": true,
           "default": true
+        },
+        "revoked": {
+          "name": "revoked",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         },
         "user_id": {
           "name": "user_id",

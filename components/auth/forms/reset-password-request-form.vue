@@ -114,7 +114,7 @@ const submitEmail = async (input: Record<string, unknown>) => {
 	try {
 		isLoading.value = true;
 
-		await $fetch("/api/auth/reset", {
+		await $fetch("/api/auth/reset/password", {
 			method: "POST",
 			body: { email: form.email, redirect: redirect.value },
 		});
@@ -150,7 +150,7 @@ const submitReset = async (input: Record<string, unknown>) => {
 	try {
 		isLoading.value = true;
 
-		await $fetch("/api/auth/reset/confirm", {
+		await $fetch("/api/auth/reset/password/confirm", {
 			method: "POST",
 			body: {
 				challengeId: challenge.value,

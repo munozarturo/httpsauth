@@ -129,7 +129,9 @@ const signUpUrl = computed(() => {
 
 const resetUrl = computed(() => {
 	if (redirect.value)
-		return `/auth/reset?redirect=${encodeURIComponent(redirect.value)}`;
-	return "/auth/reset";
+		return `/auth/reset/password?redirect=${encodeURIComponent(
+			redirect.value
+		)}`;
+	return "/auth/reset/password";
 });
 </script>

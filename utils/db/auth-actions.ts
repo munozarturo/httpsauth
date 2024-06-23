@@ -1,6 +1,6 @@
 import * as schema from "~/utils/db/schema";
 
-import { and, count, eq, gt } from "drizzle-orm";
+import { and, count, eq, gt, ne } from "drizzle-orm";
 
 import { dbClient } from "./client";
 
@@ -13,8 +13,15 @@ type AuthContext = {
 	session: {
 		token: string;
 		active: boolean;
+		revoked: boolean;
 		createdAt: Date;
 	};
+	sessions: {
+		token: string;
+		active: boolean;
+		revoked: boolean;
+		createdAt: Date;
+	}[];
 } | null;
 
 async function getUser(args: {
@@ -122,6 +129,7 @@ async function getSession(sessionId: string): Promise<AuthContext> {
 			verified: schema.users.verified,
 			sessionToken: schema.sessions.id,
 			active: schema.sessions.active,
+			revoked: schema.sessions.revoked,
 			createdAt: schema.sessions.createdAt,
 		})
 		.from(schema.sessions)
@@ -131,7 +139,37 @@ async function getSession(sessionId: string): Promise<AuthContext> {
 
 	if (res.length === 0) return null;
 
-	const { userId, email, verified, sessionToken, active, createdAt } = res[0];
+	const {
+		userId,
+		email,
+		verified,
+		sessionToken,
+		active,
+		revoked,
+		createdAt,
+	} = res[0];
+
+	const activeSessions = await dbClient
+		.select({
+			token: schema.sessions.id,
+			active: schema.sessions.active,
+			revoked: schema.sessions.revoked,
+			createdAt: schema.sessions.createdAt,
+		})
+		.from(schema.sessions)
+		.where(
+			and(
+				ne(schema.sessions.id, sessionToken),
+				and(
+					eq(schema.sessions.userId, userId),
+					and(
+						eq(schema.sessions.revoked, false),
+						eq(schema.sessions.active, true)
+					)
+				)
+			)
+		)
+		.execute();
 
 	return {
 		user: {
@@ -141,9 +179,11 @@ async function getSession(sessionId: string): Promise<AuthContext> {
 		},
 		session: {
 			token: sessionToken,
+			revoked,
 			active,
 			createdAt,
 		},
+		sessions: activeSessions,
 	};
 }
 
@@ -181,6 +221,28 @@ async function refreshSession(sessionId: string): Promise<string | null> {
 	if (!userId) return null;
 
 	return await createSession({ userId });
+}
+
+async function revokeSessions(
+	userId: string,
+	exclude?: string
+): Promise<string[] | null> {
+	const res = await dbClient
+		.update(schema.sessions)
+		.set({ active: false, revoked: true })
+		.where(
+			and(
+				eq(schema.sessions.userId, userId),
+				exclude ? ne(schema.sessions.id, exclude) : undefined
+			)
+		)
+		.returning({ sessionId: schema.sessions.id })
+		.execute();
+
+	if (res.length == 0) return null;
+
+	const closedSessions = res.map((val) => val.sessionId);
+	return closedSessions;
 }
 
 async function logCommunication(
@@ -284,6 +346,7 @@ const auth = {
 	getSession,
 	createSession,
 	closeSession,
+	revokeSessions,
 	refreshSession,
 	logCommunication,
 	getCommunications,

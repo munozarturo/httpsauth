@@ -146,15 +146,4 @@ const stats = computed(() => {
 		passwordResets: number;
 	};
 });
-
-function formatLabel(key: string): string {
-	const labels: Record<string, string> = {
-		registeredUsers: "Registered\nUsers",
-		verifiedUsers: "Verified\nUsers",
-		activeSessions: "Active\nSessions",
-		closedSessions: "Closed\nSessions",
-		passwordResets: "Passwords\nReset",
-	};
-	return labels[key] || key;
-}
 </script>

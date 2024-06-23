@@ -28,7 +28,12 @@ export default defineEventHandler(async (event) => {
 		deleteCookie(event, "session-token");
 		return;
 	}
-	var { user, session } = context;
+	var { user, session, sessions } = context;
+
+	if (session.revoked) {
+		deleteCookie(event, "session-token");
+		return;
+	}
 
 	const currentTime = Date.now();
 	if (
@@ -54,7 +59,7 @@ export default defineEventHandler(async (event) => {
 		var context = await DB.auth.getSession(refreshedSessionToken);
 		if (!context) return;
 
-		var { user, session } = context;
+		var { user, session, sessions } = context;
 
 		setCookie(event, "session-token", sessionToken, {
 			httpOnly: true,
@@ -67,5 +72,6 @@ export default defineEventHandler(async (event) => {
 	event.context.auth = {
 		user,
 		session,
+		sessions,
 	};
 });

@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS "authentication"."communications" (
 CREATE TABLE IF NOT EXISTS "authentication"."sessions" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"active" boolean DEFAULT true NOT NULL,
+	"revoked" boolean DEFAULT false NOT NULL,
 	"user_id" uuid NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL
 );

@@ -27,7 +27,7 @@
 						href="/"
 						class="w-full text-left text-2xl font-bold text-black"
 					>
-						Reset Password
+						Reset Email
 					</h1>
 					<ResetPasswordRequestForm class="w-full h-full" />
 				</div>

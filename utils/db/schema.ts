@@ -19,6 +19,7 @@ export const users = authSchema.table("users", {
 export const sessions = authSchema.table("sessions", {
 	id: uuid("id").primaryKey().defaultRandom(),
 	active: boolean("active").notNull().default(true),
+	revoked: boolean("revoked").notNull().default(false),
 	userId: uuid("user_id")
 		.notNull()
 		.references(() => users.id),
