@@ -23,12 +23,12 @@ export default defineNuxtPlugin(() => {
 
 	return {
 		provide: {
-			event: <K extends EventType>(type: K, payload: EventsMap[K]) =>
-				emitter.emit(type, payload),
-			listen: <K extends EventType>(
-				type: K,
+			publish: <K extends EventType>(event: K, payload: EventsMap[K]) =>
+				emitter.emit(event, payload),
+			subcribe: <K extends EventType>(
+				event: K,
 				handler: (payload: EventsMap[K]) => void
-			) => emitter.on(type, handler),
+			) => emitter.on(event, handler),
 		},
 	};
 });

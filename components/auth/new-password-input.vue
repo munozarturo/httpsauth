@@ -22,7 +22,7 @@
 					:id="confirmPasswordId"
 					:name="confirmPasswordName"
 					:value="confirmPassword"
-					@update:value="confirmPassword = $event"
+					@update:value="confirmPassword = $publish"
 				/>
 			</div>
 		</div>

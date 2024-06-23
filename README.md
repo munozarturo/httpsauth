@@ -53,6 +53,26 @@ Remove the following:
 
 ## Notes
 
+### Events
+
+There is an event publish/subscribe plugin implemented in `plugins/events.ts`. It is possible to listen to events using the following pattern
+
+```typescript
+const { $subcribe } = useNuxtApp();
+
+$subcribe("auth:sign-out", () => {
+  console.log("Signed Out.")
+});
+```
+
+and emit events using this pattern
+
+```typescript
+const { $publish } = useNuxtApp();
+
+$publish("auth:sign-out", null); // can change event payload type from null to something else
+```
+
 ### Build Command with ESBuild Copy
 
 The build command is different since there are some issues with the `vue-email` package and including the `esbuild-linux-64` directory in the output. Refer to [this](https://github.com/vue-email/vue-email/issues/58) GitHub issue.

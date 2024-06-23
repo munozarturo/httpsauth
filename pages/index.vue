@@ -135,11 +135,11 @@
 </template>
 
 <script lang="ts" setup>
-const { $listen } = useNuxtApp();
+const { $subcribe } = useNuxtApp();
 
 const { data, refresh } = await useFetch("/api/auth/stats", { method: "GET" });
 
-$listen("auth:sign-out", () => {
+$subcribe("auth:sign-out", () => {
 	refresh();
 });
 

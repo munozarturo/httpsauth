@@ -9,7 +9,7 @@
 			maxlength="1"
 			class="w-12 h-12 text-center text-2xl border border-gray-300 rounded-md"
 			@input="handleInput(index)"
-			@keydown="handleKeyDown(index, $event)"
+			@keydown="handleKeyDown(index, $publish)"
 			@paste="handlePaste"
 		/>
 	</div>
