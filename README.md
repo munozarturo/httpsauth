@@ -11,15 +11,9 @@ Live deployment [httpsauth.munozarturo.com](https://httpsauth.munozarturo.com/).
 * Development Tools
   * [ ] Add event subscription and broadcaster for auth events
 * Authentication FLow
-  * [ ] Password Policy
-  * [ ] Account Lockout
   * [ ] Security Headers
-  * [ ] Password History
   * [ ] API Rate Limiter
   * [ ] Fix SVGs
-  * [x] Account Section
-    * [x] Update Password
-    * [x] Close All Sessions
 * QOL
   * [ ] Improve form formatting.
   * [ ] [SEO and Meta](https://nuxt.com/docs/getting-started/seo-meta)
