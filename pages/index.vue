@@ -135,7 +135,13 @@
 </template>
 
 <script lang="ts" setup>
-const { data } = await useFetch("/api/auth/stats", { method: "GET" });
+const { $listen } = useNuxtApp();
+
+const { data, refresh } = await useFetch("/api/auth/stats", { method: "GET" });
+
+$listen("auth:sign-out", () => {
+	refresh();
+});
 
 const stats = computed(() => {
 	return data.value as {

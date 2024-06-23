@@ -161,6 +161,7 @@ const resendVerificationToken = async () => {
 };
 
 const submitForm = async (input: Record<string, unknown>) => {
+	const { $event } = useNuxtApp();
 	const form = input as FormValues;
 
 	try {
@@ -174,6 +175,7 @@ const submitForm = async (input: Record<string, unknown>) => {
 			},
 		});
 
+		$event("auth:verify", null);
 		toasterStore.addMessage("Account verified", "success");
 
 		router.push(forwardUrl.value);

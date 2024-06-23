@@ -85,6 +85,7 @@ type FormValues = zod.infer<typeof zodSchema>;
 const { value: password } = useField<string>("password");
 
 const submitForm = async (input: Record<string, unknown>) => {
+	const { $event } = useNuxtApp();
 	const form = input as FormValues;
 
 	const forwardUrl = computed(() => {
@@ -106,6 +107,7 @@ const submitForm = async (input: Record<string, unknown>) => {
 			body: form,
 		});
 
+		$event("auth:sign-in", null);
 		toasterStore.addMessage("Signed In", "success");
 
 		router.push(forwardUrl.value);

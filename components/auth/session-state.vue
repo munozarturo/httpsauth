@@ -47,6 +47,8 @@ const authStore = useAuthStore();
 const toasterStore = useToasterStore();
 
 const signOut = async () => {
+	const { $event } = useNuxtApp();
+
 	try {
 		await $fetch("/api/auth/signout", {
 			method: "POST",
@@ -54,6 +56,7 @@ const signOut = async () => {
 
 		authStore.setAuthContext(null);
 
+		$event("auth:sign-out", null);
 		toasterStore.addMessage("Signed Out", "success");
 
 		router.push("/");

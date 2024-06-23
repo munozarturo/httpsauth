@@ -139,6 +139,7 @@ const submitUserForm = async (input: Record<string, unknown>) => {
 };
 
 const submitPasswordForm = async (input: Record<string, unknown>) => {
+	const { $event } = useNuxtApp();
 	const form = input as PasswordFormValues;
 
 	const verifyUrl = computed(() => {
@@ -158,6 +159,7 @@ const submitPasswordForm = async (input: Record<string, unknown>) => {
 			},
 		});
 
+		$event("auth:sign-up", null);
 		toasterStore.addMessage("Account registered", "success");
 
 		router.push(verifyUrl.value);

@@ -145,6 +145,7 @@ type ResetFormValues = zod.infer<typeof resetZodSchema>;
 const { value: password } = useField<string>("password");
 
 const submitReset = async (input: Record<string, unknown>) => {
+	const { $event } = useNuxtApp();
 	const form = input as ResetFormValues;
 
 	try {
@@ -159,6 +160,7 @@ const submitReset = async (input: Record<string, unknown>) => {
 			},
 		});
 
+		$event("auth:reset-password", null);
 		toasterStore.addMessage("Password reset", "success");
 		errorMessage.value = "";
 
