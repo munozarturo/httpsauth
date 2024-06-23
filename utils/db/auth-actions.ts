@@ -110,14 +110,39 @@ async function verifyUser(userId: string): Promise<void> {
 		.execute();
 }
 
+async function getDecomissinedPasswords(
+	userId: string
+): Promise<{ passwordHash: string; decomissionedAt: Date }[] | null> {
+	const res = await dbClient
+		.select({
+			passwordHash: schema.decomissionedPasswords.passwordHash,
+			decomissionedAt: schema.decomissionedPasswords.decomissionedAt,
+		})
+		.from(schema.decomissionedPasswords)
+		.where(eq(schema.decomissionedPasswords.userId, userId))
+		.execute();
+
+	return res;
+}
+
 async function resetPassword(
 	userId: string,
 	passwordHash: string
 ): Promise<void> {
+	const user = await getUser({ userId });
+
+	if (!user) return;
+	const { passwordHash: oldPasswordHash } = user;
+
 	await dbClient
 		.update(schema.users)
 		.set({ passwordHash })
 		.where(eq(schema.users.id, userId))
+		.execute();
+
+	await dbClient
+		.insert(schema.decomissionedPasswords)
+		.values({ userId, passwordHash: oldPasswordHash })
 		.execute();
 }
 
@@ -342,6 +367,7 @@ const auth = {
 	createChallenge,
 	attemptChallenge,
 	verifyUser,
+	getDecomissinedPasswords,
 	resetPassword,
 	getSession,
 	createSession,

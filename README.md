@@ -17,10 +17,9 @@ Live deployment [httpsauth.munozarturo.com](https://httpsauth.munozarturo.com/).
   * [ ] Password History
   * [ ] API Rate Limiter
   * [ ] Fix SVGs
-  * [ ] Account Section
-    * [ ] Update Email
-    * [ ] Update Password
-    * [ ] Close All Sessions
+  * [x] Account Section
+    * [x] Update Password
+    * [x] Close All Sessions
 * QOL
   * [ ] Improve form formatting.
   * [ ] [SEO and Meta](https://nuxt.com/docs/getting-started/seo-meta)

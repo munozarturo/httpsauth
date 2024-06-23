@@ -16,6 +16,18 @@ export const users = authSchema.table("users", {
 	verified: boolean("verified").notNull().default(false),
 });
 
+export const decomissionedPasswords = authSchema.table(
+	"decomissioned_passwords",
+	{
+		id: uuid("id").primaryKey().defaultRandom(),
+		userId: uuid("user_id")
+			.notNull()
+			.references(() => users.id),
+		passwordHash: text("password_hash").notNull(),
+		decomissionedAt: timestamp("decomissined_at").notNull().defaultNow(),
+	}
+);
+
 export const sessions = authSchema.table("sessions", {
 	id: uuid("id").primaryKey().defaultRandom(),
 	active: boolean("active").notNull().default(true),
