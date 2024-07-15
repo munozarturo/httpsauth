@@ -1,4 +1,13 @@
-# HTTPS Auth
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://www.munozarturo.com/assets/httpsauth/logo-long-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="https://www.munozarturo.com/assets/httpsauth/logo-long-light.svg">
+    <img alt="httpsauth" src="https://www.munozarturo.com/assets/httpsauth/logo-long-light.svg" width="50%" height="40%">
+  </picture>
+</p>
+
+<!-- omit from toc -->
+# httpsauth
 
 From-scratch implementation of authentication flow over HTTPS using stateful back-end session management.
 
@@ -6,18 +15,28 @@ From-scratch implementation of authentication flow over HTTPS using stateful bac
 
 Live deployment [httpsauth.munozarturo.com](https://httpsauth.munozarturo.com/).
 
+<!-- omit from toc -->
+## Table of Contents
+
+- [To Do](#to-do)
+- [Setup](#setup)
+  - [Setup Notes](#setup-notes)
+- [Notes](#notes)
+  - [Events](#events)
+  - [Build Command with ESBuild Copy](#build-command-with-esbuild-copy)
+
 ## To Do
 
-* Authentication FLow
-  * [ ] Security Headers
-  * [ ] API Rate Limiter
-  * [ ] Fix SVGs
-* QOL
-  * [ ] Improve form formatting.
-  * [ ] [SEO and Meta](https://nuxt.com/docs/getting-started/seo-meta)
-* Documentation
-  * [ ] Improve `README.md`.
-  * [ ] Write guide on how to implement authentication from scracth.
+- Authentication FLow
+  - [ ] Security Headers
+  - [ ] API Rate Limiter
+  - [ ] Fix SVGs
+- QOL
+  - [ ] Improve form formatting.
+  - [ ] [SEO and Meta](https://nuxt.com/docs/getting-started/seo-meta)
+- Documentation
+  - [ ] Improve `README.md`.
+  - [ ] Write guide on how to implement authentication from scracth.
 
 ## Setup
 
@@ -38,16 +57,16 @@ Live deployment [httpsauth.munozarturo.com](https://httpsauth.munozarturo.com/).
 
 2. Run `npm run db:generate`.
 3. Run the SQL scripts in [`utils/db/out`](utils/db/out) in the database engine.
-   * This project is built to work with PostgreSQL.
+   - This project is built to work with PostgreSQL.
 4. Run `npm run dev` for local development.
 
 ### Setup Notes
 
 Remove the following:
 
-* `getStats` in `utils/db/auth-actions.ts`
-* `server/api/auth/stats.get.ts`
-* stats display in `pages/index.vue`
+- `getStats` in `utils/db/auth-actions.ts`
+- `server/api/auth/stats.get.ts`
+- stats display in `pages/index.vue`
 
 ## Notes
 
