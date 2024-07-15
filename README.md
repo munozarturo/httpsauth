@@ -1,10 +1,10 @@
-<p align="center">
+<div align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://www.munozarturo.com/assets/httpsauth/logo-github-dark.svg">
     <source media="(prefers-color-scheme: light)" srcset="https://www.munozarturo.com/assets/httpsauth/logo-github-light.svg">
     <img alt="httpsauth" src="https://www.munozarturo.com/assets/httpsauth/logo-github-light.svg" width="50%" height="40%">
   </picture>
-</p>
+</div>
 
 <!-- omit from toc -->
 # httpsauth
