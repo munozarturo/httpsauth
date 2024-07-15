@@ -1,0 +1,1 @@
+DROP TABLE "authentication"."decomissioned_passwords";
